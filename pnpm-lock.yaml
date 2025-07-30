@@ -12,10 +12,10 @@ importers:
     dependencies:
       '@pmndrs/uikit-default':
         specifier: ^1.0.24
-        version: 1.0.24(three@0.178.0)
+        version: 1.0.24(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       '@pmndrs/uikit-lucide':
         specifier: ^1.0.0
-        version: 1.0.23(three@0.178.0)
+        version: 1.0.23(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       '@pmndrs/uikitml':
         specifier: workspace:^
         version: link:../../packages/uikitml
@@ -42,8 +42,8 @@ importers:
   packages/uikitml:
     dependencies:
       '@pmndrs/uikit':
-        specifier: ^1.0.24
-        version: 1.0.24(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+        specifier: ^1.0.25
+        version: 1.0.25(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       chai:
         specifier: ^5.2.1
         version: 5.2.1
@@ -308,6 +308,11 @@ packages:
 
   '@pmndrs/uikit@1.0.24':
     resolution: {integrity: sha512-Dy5Y79pBWvds+s0Z6uRxmjYifKSPPbLOPXluypCTmcUcNbqwDX9Ek/c5b1bnKYEIb4VWhN5Dga9EWl3tq/1NhA==}
+    peerDependencies:
+      three: '>=0.162'
+
+  '@pmndrs/uikit@1.0.25':
+    resolution: {integrity: sha512-2B4T0kSSNNa5H+l8rFzyTWTYFTIryOL72rvvQnqYHkOkqzyGaN4z4VvoklVV0Kmr0WoLLmeCOgvpmOhbp98nEQ==}
     peerDependencies:
       three: '>=0.162'
 
@@ -1462,15 +1467,15 @@ snapshots:
 
   '@pmndrs/msdfonts@0.8.21': {}
 
-  '@pmndrs/uikit-default@1.0.24(three@0.178.0)':
+  '@pmndrs/uikit-default@1.0.24(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
     dependencies:
       '@pmndrs/uikit': 1.0.24(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
-      '@pmndrs/uikit-lucide': 1.0.23(three@0.178.0)
+      '@pmndrs/uikit-lucide': 1.0.23(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
     transitivePeerDependencies:
       - three
       - ts-node
 
-  '@pmndrs/uikit-lucide@1.0.23(three@0.178.0)':
+  '@pmndrs/uikit-lucide@1.0.23(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
     dependencies:
       '@pmndrs/uikit': 1.0.24(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
     transitivePeerDependencies:
@@ -1482,6 +1487,19 @@ snapshots:
       '@preact/signals-core': 1.11.0
 
   '@pmndrs/uikit@1.0.24(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
+    dependencies:
+      '@pmndrs/msdfonts': 0.8.21
+      '@pmndrs/uikit-pub-sub': 1.0.6
+      '@preact/signals-core': 1.11.0
+      inline-style-parser: 0.2.4
+      node-html-parser: 6.1.13
+      three: 0.178.0
+      tw-to-css: 0.0.12(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+      yoga-layout: 3.2.1
+    transitivePeerDependencies:
+      - ts-node
+
+  '@pmndrs/uikit@1.0.25(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
     dependencies:
       '@pmndrs/msdfonts': 0.8.21
       '@pmndrs/uikit-pub-sub': 1.0.6

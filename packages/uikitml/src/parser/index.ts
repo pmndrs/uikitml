@@ -1,11 +1,7 @@
 import { parse as parse5Parse, serializeOuter } from 'parse5'
-import parseInlineCSS from 'inline-style-parser'
+import _parseInlineCSS from 'inline-style-parser'
 import { htmlElements } from './defaults.js'
 import { conditionals } from '../index.js'
-
-//TODO: add support for #btn * {} and #btn:hover * {}
-//TODO: #btn treted as class
-//TODO: parse("<link ref='./text.css'/>", { files: { 'text.css': '' } })
 
 export interface Position {
   line: number
@@ -85,14 +81,116 @@ export function parse(
 
   annotateElements(document)
 
+  // Process link elements with ref attributes and collect additional CSS classes
+  const additionalClasses = processLinkElements(document, config)
+
   // Convert parse5 document directly to UIKit JSON
   const bodyElement = extractBodyFromDocument(document)
 
+  // Merge inline styles with external CSS
+  const inlineClasses = toUikitClassesJson(document)
+  const mergedClasses = mergeCssClasses(inlineClasses, additionalClasses)
+
   return {
     element: toUikitElementJson(bodyElement, config),
-    classes: toUikitClassesJson(document),
+    classes: mergedClasses,
     ranges,
   }
+}
+
+function parseCss(text: string) {
+  const result: Array<{ name: string; selector: string | undefined; style: Record<string, string> }> = []
+  // Extract regular CSS classes
+  let match: RegExpExecArray | null
+  while ((match = classRegex.exec(text)) != null) {
+    const [, name, selector, classContent] = match
+    if (name && classContent) {
+      result.push({ name, selector, style: parseInlineCss(classContent) })
+    }
+  }
+
+  // Extract ID styles and treat them as classes with special prefix
+  while ((match = idRegex.exec(text)) != null) {
+    const [, idName, selector, classContent] = match
+    if (idName && classContent) {
+      const idClassName = `__id__${idName}`
+      result.push({ name: idClassName, selector, style: parseInlineCss(classContent) })
+    }
+  }
+
+  return result
+}
+
+function processLinkElements(
+  document: any,
+  config: ParseConfig | undefined,
+): Record<string, { origin?: string; content: Record<string, any> }> {
+  const linkClasses: Record<string, { origin?: string; content: Record<string, any> }> = {}
+
+  const resolveFile = config?.resolveFile
+  if (resolveFile == null) {
+    return linkClasses
+  }
+
+  // Traverse the document tree looking for link elements
+  const findLinkElements = (node: any): void => {
+    if (node.nodeName === 'link' && node.attrs) {
+      const refAttr = node.attrs.find((attr: any) => attr.name === 'ref')
+      if (refAttr && refAttr.value) {
+        try {
+          const cssContent = resolveFile(refAttr.value)
+          const parsedClasses = parseCss(cssContent)
+
+          // Merge parsed classes into linkClasses
+          for (const { name, style } of parsedClasses) {
+            if (linkClasses[name]) {
+              // Merge class content if it already exists
+              Object.assign(linkClasses[name].content, style)
+            } else {
+              linkClasses[name] = {
+                origin: refAttr.value,
+                content: style,
+              }
+            }
+          }
+        } catch (error) {
+          if (config?.onError) {
+            config.onError(
+              `Error loading CSS file '${refAttr.value}': ${error instanceof Error ? error.message : String(error)}`,
+            )
+          }
+        }
+      }
+    }
+
+    if (node.childNodes) {
+      node.childNodes.forEach(findLinkElements)
+    }
+  }
+
+  findLinkElements(document)
+  return linkClasses
+}
+function mergeCssClasses(
+  inlineClasses: Record<string, { origin?: string; content: Record<string, any> }>,
+  linkClasses: Record<string, { origin?: string; content: Record<string, any> }>,
+): Record<string, { origin?: string; content: Record<string, any> }> {
+  const merged = { ...linkClasses }
+
+  // Merge inline classes (these take precedence over link classes)
+  for (const [className, classData] of Object.entries(inlineClasses)) {
+    if (merged[className]) {
+      // Deep merge content, with inline styles taking precedence
+      merged[className] = {
+        ...merged[className],
+        content: { ...merged[className].content, ...classData.content },
+      }
+    } else {
+      merged[className] = classData
+    }
+  }
+
+  return merged
 }
 
 function extractCssRanges(cssText: string, styleLocation: any, ranges: Record<string, Range>): void {
@@ -242,23 +340,7 @@ function toUikitClassesList(
       .map((child: any) => child.value || '')
       .join('')
 
-    // Extract regular CSS classes
-    let match: RegExpExecArray | null
-    while ((match = classRegex.exec(textContent)) != null) {
-      const [, name, selector, classContent] = match
-      if (name && classContent) {
-        result.push({ name, selector, style: parseStyle(classContent) })
-      }
-    }
-
-    // Extract ID styles and treat them as classes with special prefix
-    while ((match = idRegex.exec(textContent)) != null) {
-      const [, idName, selector, classContent] = match
-      if (idName && classContent) {
-        const idClassName = `__id__${idName}`
-        result.push({ name: idClassName, selector, style: parseStyle(classContent) })
-      }
-    }
+    result.push(...parseCss(textContent))
   }
 
   if (element.childNodes) {
@@ -299,7 +381,7 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
   }
 
   const sourceTag = element.nodeName.toLowerCase()
-  if (sourceTag === 'style') {
+  if (sourceTag === 'style' || sourceTag === 'link') {
     return undefined
   }
 
@@ -454,7 +536,7 @@ function toUikitProperties(attributes: Array<{ name: string; value: string }>): 
 
   // Parse style attribute
   if (properties.style != null) {
-    properties.style = parseStyle(properties.style) as any
+    properties.style = parseInlineCss(properties.style) as any
   }
   for (const conditional of conditionals) {
     const colonKey = `${conditional}:style`
@@ -463,7 +545,7 @@ function toUikitProperties(attributes: Array<{ name: string; value: string }>): 
     }
     properties.style ??= {}
     properties.style[conditional] ??= {}
-    Object.assign(properties.style[conditional], parseStyle(properties[colonKey]))
+    Object.assign(properties.style[conditional], parseInlineCss(properties[colonKey]))
     delete properties[colonKey]
   }
 
@@ -476,8 +558,8 @@ function toUikitProperties(attributes: Array<{ name: string; value: string }>): 
   return finalProperties
 }
 
-export function parseStyle(styleString: string) {
-  const parsedStyle = parseInlineCSS(styleString)
+export function parseInlineCss(styleString: string) {
+  const parsedStyle = _parseInlineCSS(styleString)
   const style: Record<string, string> = {}
   for (const parsedStyleEntry of parsedStyle) {
     if (parsedStyleEntry.type === 'comment') {

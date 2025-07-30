@@ -695,4 +695,186 @@ describe('html parser', () => {
       })
     })
   })
+
+  describe('link element with ref attribute', () => {
+    it('should parse link element with ref and import CSS classes using resolveFile', () => {
+      const mockCssContent = `
+        .text-red {
+          color: red;
+          font-weight: bold;
+        }
+        .bg-blue {
+          background-color: blue;
+          padding: 10px;
+        }
+        .hover-scale:hover {
+          transform: scale(1.1);
+        }
+      `
+
+      const resolveFile = (filePath: string) => {
+        if (filePath === './text.css') {
+          return mockCssContent
+        }
+        throw new Error(`File not found: ${filePath}`)
+      }
+
+      const result = parse('<link ref="./text.css"/><div class="text-red">Hello</div>', { resolveFile })
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: ['Hello'],
+          properties: {
+            class: 'text-red',
+          },
+          defaultProperties: {},
+        },
+        classes: {
+          'text-red': {
+            origin: './text.css',
+            content: {
+              color: 'red',
+              fontWeight: 'bold',
+            },
+          },
+          'bg-blue': {
+            origin: './text.css',
+            content: {
+              backgroundColor: 'blue',
+              padding: '10px',
+            },
+          },
+          'hover-scale': {
+            origin: './text.css',
+            content: {
+              hover: {
+                transform: 'scale(1.1)',
+              },
+            },
+          },
+        },
+      })
+    })
+
+    it('should handle multiple link elements', () => {
+      const mockCssContent1 = `
+        .btn {
+          padding: 8px 16px;
+          border-radius: 4px;
+        }
+      `
+      const mockCssContent2 = `
+        .btn-primary {
+          background-color: blue;
+          color: white;
+        }
+      `
+
+      const resolveFile = (filePath: string) => {
+        if (filePath === './buttons.css') return mockCssContent1
+        if (filePath === './themes.css') return mockCssContent2
+        throw new Error(`File not found: ${filePath}`)
+      }
+
+      const result = parse(`
+        <link ref="./buttons.css"/>
+        <link ref="./themes.css"/>
+        <button class="btn btn-primary">Click me</button>
+      `, { resolveFile })
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'button',
+          children: ['Click me'],
+          properties: {
+            class: 'btn btn-primary',
+          },
+          defaultProperties: {
+            verticalAlign: 'middle',
+            textAlign: 'center',
+            cursor: 'pointer',
+          },
+        },
+        classes: {
+          'btn': {
+            origin: './buttons.css',
+            content: {
+              padding: '8px 16px',
+              borderRadius: '4px',
+            },
+          },
+          'btn-primary': {
+            origin: './themes.css',
+            content: {
+              backgroundColor: 'blue',
+              color: 'white',
+            },
+          },
+        },
+      })
+    })
+
+    it('should handle link elements without resolveFile function', () => {
+      const result = parse('<link ref="./text.css"/><div>Hello</div>')
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: ['Hello'],
+          properties: {},
+          defaultProperties: {},
+        },
+        classes: {},
+      })
+    })
+
+    it('should handle link elements with href attribute (should be ignored)', () => {
+      const resolveFile = (_filePath: string) => {
+        throw new Error(`Should not be called for href attribute`)
+      }
+
+      const result = parse('<link href="./text.css"/><div>Hello</div>', { resolveFile })
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: ['Hello'],
+          properties: {},
+          defaultProperties: {},
+        },
+        classes: {},
+      })
+    })
+
+    it('should handle resolveFile errors gracefully', () => {
+      const resolveFile = (filePath: string) => {
+        throw new Error(`File not found: ${filePath}`)
+      }
+
+      let errorMessage = ''
+      const onError = (message: string) => {
+        errorMessage = message
+      }
+
+      const result = parse('<link ref="./missing.css"/><div>Hello</div>', { resolveFile, onError })
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: ['Hello'],
+          properties: {},
+          defaultProperties: {},
+        },
+        classes: {},
+      })
+
+      expect(errorMessage).to.include('Error loading CSS file')
+    })
+  })
 })

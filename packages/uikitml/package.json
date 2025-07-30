@@ -3,13 +3,13 @@
   "version": "0.0.10",
   "type": "module",
   "dependencies": {
-    "@pmndrs/uikit": "^1.0.24",
+    "@pmndrs/uikit": "^1.0.25",
     "chai": "^5.2.1",
     "inline-style-parser": "^0.2.4",
     "parse5": "^7.1.2"
   },
   "devDependencies": {
-    "@pmndrs/uikit": "^1.0.24",
+    "@pmndrs/uikit": "^1.0.25",
     "@types/chai": "^5.2.2",
     "@types/jsdom": "^21.1.7",
     "@types/mocha": "^10.0.10",
