@@ -3,6 +3,9 @@ import _parseInlineCSS from 'inline-style-parser'
 import { htmlElements } from './defaults.js'
 import { conditionals } from '../index.js'
 
+const classRegex = /\.([a-zA-Z0-9_-]+)(?::([a-zA-Z0-9_-]+))?\s*{([^}]*)}/g
+const idRegex = /#([a-zA-Z0-9_-]+)(?::([a-zA-Z0-9_-]+))?\s*{([^}]*)}/g
+
 export interface Position {
   line: number
   column: number
@@ -81,15 +84,13 @@ export function parse(
 
   annotateElements(document)
 
-  // Process link elements with ref attributes and collect additional CSS classes
-  const additionalClasses = processLinkElements(document, config)
-
   // Convert parse5 document directly to UIKit JSON
   const bodyElement = extractBodyFromDocument(document)
 
-  // Merge inline styles with external CSS
-  const inlineClasses = toUikitClassesJson(document)
-  const mergedClasses = mergeCssClasses(inlineClasses, additionalClasses)
+  // Process external CSS files and inline styles into a single target
+  const mergedClasses: Record<string, { origin?: string; content: Record<string, any> }> = {}
+  processLinkElements(document, config, mergedClasses)
+  processInlineStyles(document, mergedClasses)
 
   return {
     element: toUikitElementJson(bodyElement, config),
@@ -98,38 +99,66 @@ export function parse(
   }
 }
 
-function parseCss(text: string) {
-  const result: Array<{ name: string; selector: string | undefined; style: Record<string, string> }> = []
+function mergeCssIntoTarget(
+  cssText: string,
+  target: Record<string, { origin?: string; content: Record<string, any> }>,
+  origin?: string
+): void {
   // Extract regular CSS classes
   let match: RegExpExecArray | null
-  while ((match = classRegex.exec(text)) != null) {
+  while ((match = classRegex.exec(cssText)) != null) {
     const [, name, selector, classContent] = match
     if (name && classContent) {
-      result.push({ name, selector, style: parseInlineCss(classContent) })
+      let entry = target[name]
+      if (entry == null) {
+        target[name] = entry = { content: {} }
+        if (origin !== undefined) {
+          entry.origin = origin
+        }
+      }
+      let content = entry.content
+      if (selector != null) {
+        if (!(selector in content)) {
+          content[selector] = {}
+        }
+        content = content[selector]
+      }
+      Object.assign(content, parseInlineCss(classContent))
     }
   }
 
   // Extract ID styles and treat them as classes with special prefix
-  while ((match = idRegex.exec(text)) != null) {
+  while ((match = idRegex.exec(cssText)) != null) {
     const [, idName, selector, classContent] = match
     if (idName && classContent) {
       const idClassName = `__id__${idName}`
-      result.push({ name: idClassName, selector, style: parseInlineCss(classContent) })
+      let entry = target[idClassName]
+      if (entry == null) {
+        target[idClassName] = entry = { content: {} }
+        if (origin !== undefined) {
+          entry.origin = origin
+        }
+      }
+      let content = entry.content
+      if (selector != null) {
+        if (!(selector in content)) {
+          content[selector] = {}
+        }
+        content = content[selector]
+      }
+      Object.assign(content, parseInlineCss(classContent))
     }
   }
-
-  return result
 }
 
 function processLinkElements(
   document: any,
   config: ParseConfig | undefined,
-): Record<string, { origin?: string; content: Record<string, any> }> {
-  const linkClasses: Record<string, { origin?: string; content: Record<string, any> }> = {}
-
+  target: Record<string, { origin?: string; content: Record<string, any> }>
+): void {
   const resolveFile = config?.resolveFile
   if (resolveFile == null) {
-    return linkClasses
+    return
   }
 
   // Traverse the document tree looking for link elements
@@ -139,20 +168,7 @@ function processLinkElements(
       if (refAttr && refAttr.value) {
         try {
           const cssContent = resolveFile(refAttr.value)
-          const parsedClasses = parseCss(cssContent)
-
-          // Merge parsed classes into linkClasses
-          for (const { name, style } of parsedClasses) {
-            if (linkClasses[name]) {
-              // Merge class content if it already exists
-              Object.assign(linkClasses[name].content, style)
-            } else {
-              linkClasses[name] = {
-                origin: refAttr.value,
-                content: style,
-              }
-            }
-          }
+          mergeCssIntoTarget(cssContent, target, refAttr.value)
         } catch (error) {
           if (config?.onError) {
             config.onError(
@@ -169,28 +185,30 @@ function processLinkElements(
   }
 
   findLinkElements(document)
-  return linkClasses
 }
-function mergeCssClasses(
-  inlineClasses: Record<string, { origin?: string; content: Record<string, any> }>,
-  linkClasses: Record<string, { origin?: string; content: Record<string, any> }>,
-): Record<string, { origin?: string; content: Record<string, any> }> {
-  const merged = { ...linkClasses }
+function processInlineStyles(
+  document: any,
+  target: Record<string, { origin?: string; content: Record<string, any> }>
+): void {
+  const traverseElements = (element: any): void => {
+    if (element.nodeName === 'style' && element.childNodes) {
+      // Extract text content from style element's text nodes
+      const textContent = element.childNodes
+        .filter((child: any) => child.nodeName === '#text')
+        .map((child: any) => child.value || '')
+        .join('')
 
-  // Merge inline classes (these take precedence over link classes)
-  for (const [className, classData] of Object.entries(inlineClasses)) {
-    if (merged[className]) {
-      // Deep merge content, with inline styles taking precedence
-      merged[className] = {
-        ...merged[className],
-        content: { ...merged[className].content, ...classData.content },
+      mergeCssIntoTarget(textContent, target)
+    }
+
+    if (element.childNodes) {
+      for (const node of element.childNodes) {
+        traverseElements(node)
       }
-    } else {
-      merged[className] = classData
     }
   }
 
-  return merged
+  traverseElements(document)
 }
 
 function extractCssRanges(cssText: string, styleLocation: any, ranges: Record<string, Range>): void {
@@ -302,54 +320,6 @@ function removeDataUidFromNode(node: any): any {
   }
 
   return clonedNode
-}
-
-function toUikitClassesJson(element: any) {
-  const classesList = toUikitClassesList(element)
-  const result: Record<string, { origin?: string; content: Record<string, any> }> = {}
-  for (const { name, selector, style } of classesList) {
-    let entry = result[name]
-    if (entry == null) {
-      result[name] = entry = { content: {} }
-    }
-    let content = entry.content
-    if (selector != null) {
-      if (!(selector in content)) {
-        content[selector] = {}
-      }
-      content = content[selector]
-    }
-
-    Object.assign(content, style)
-  }
-  return result
-}
-
-const classRegex = /\.([a-zA-Z0-9_-]+)(?::([a-zA-Z0-9_-]+))?\s*{([^}]*)}/g
-const idRegex = /#([a-zA-Z0-9_-]+)(?::([a-zA-Z0-9_-]+))?\s*{([^}]*)}/g
-
-function toUikitClassesList(
-  element: any,
-): Array<{ name: string; selector: string | undefined; style: Record<string, string> }> {
-  const result: Array<{ name: string; selector: string | undefined; style: Record<string, string> }> = []
-
-  if (element.nodeName === 'style' && element.childNodes) {
-    // Extract text content from style element's text nodes
-    const textContent = element.childNodes
-      .filter((child: any) => child.nodeName === '#text')
-      .map((child: any) => child.value || '')
-      .join('')
-
-    result.push(...parseCss(textContent))
-  }
-
-  if (element.childNodes) {
-    for (const node of element.childNodes) {
-      result.push(...toUikitClassesList(node))
-    }
-  }
-
-  return result
 }
 
 function toUikitElementJson(element: any, config: ParseConfig | undefined): ElementJson | string | undefined {

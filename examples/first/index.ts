@@ -28,7 +28,7 @@ scene.add(directionalLight)
 // Parse and interpret the uikitml - this returns a Three.js object
 const userInterface = interpret(
   parse(
-    "<Card style='padding: 12px; align-items: center; gap: 8px;' name='123'>Hello World<GithubIcon style='margin-left: 4px'/></Card>",
+    "<Card style='padding: 12px; align-items: center; gap: 8px;' name='123'>Hello World<GithubIcon/></Card>",
   ),
   {
     ...(Icons as {}),
