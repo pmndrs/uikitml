@@ -1,0 +1,21 @@
+{
+    "name": "uikitml-threejs-example",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --host",
+        "build": "tsc && vite build"
+    },
+    "dependencies": {
+        "@pmndrs/uikitml": "workspace:^",
+        "@pmndrs/uikit-default": "^1.0.24",
+        "@pmndrs/uikit-lucide": "^1.0.0",
+        "stats.js": "^0.17.0",
+        "three": "^0.178.0"
+    },
+    "devDependencies": {
+        "@types/stats.js": "^0.17.4",
+        "@types/three": "^0.178.1",
+        "typescript": "^5.2.2",
+        "vite": "^5.0.8"
+    }
+}

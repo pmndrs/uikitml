@@ -1,0 +1,43 @@
+{
+  "name": "@pmndrs/uikitml",
+  "version": "0.0.10",
+  "type": "module",
+  "dependencies": {
+    "inline-style-parser": "^0.2.4",
+    "parse5": "^7.1.2",
+    "@pmndrs/uikit": "^1.0.24"
+  },
+  "devDependencies": {
+    "@pmndrs/uikit": "^1.0.24",
+    "@types/jsdom": "^21.1.7",
+    "jsdom": "^26.1.0",
+    "@types/three": "^0.178.1"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "mocha ./test/*.spec.ts --exit"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "src/index.ts",
+  "publishConfig": {
+    "main": "dist/index.js"
+  },
+  "license": "MIT",
+  "author": "Bela Bohlender",
+  "homepage": "https://github.com/pmndrs/uikit",
+  "keywords": [
+    "r3f",
+    "3d",
+    "uikit",
+    "html",
+    "properties",
+    "three.js",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:pmndrs/uikit.git"
+  }
+}

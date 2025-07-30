@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "target": "ESNext",
+        "declaration": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "noUncheckedIndexedAccess": true
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "esm": true
+    }
+}
