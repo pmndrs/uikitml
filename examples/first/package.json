@@ -6,11 +6,15 @@
         "build": "tsc && vite build"
     },
     "dependencies": {
+        "@pmndrs/handle": "^6.6.16",
+        "@pmndrs/pointer-events": "^6.6.16",
         "@pmndrs/uikitml": "workspace:^",
-        "@pmndrs/uikit-default": "^1.0.24",
-        "@pmndrs/uikit-lucide": "^1.0.0",
+        "@pmndrs/uikit-default": "^1.0.32",
+        "@pmndrs/uikit-horizon": "^1.0.32",
+        "@pmndrs/uikit-lucide": "^1.0.32",
         "stats.js": "^0.17.0",
-        "three": "^0.178.0"
+        "three": "^0.178.0",
+        "@pmndrs/uikit": "^1.0.32"
     },
     "devDependencies": {
         "@types/stats.js": "^0.17.4",

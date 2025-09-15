@@ -1,9 +1,11 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { interpret, parse, reversePainterSortStable } from '@pmndrs/uikitml'
 import Stats from 'stats.js'
 import * as Icons from '@pmndrs/uikit-lucide'
 import * as Defaults from '@pmndrs/uikit-default'
+import * as Horizon from '@pmndrs/uikit-horizon'
+import { forwardHtmlEvents } from '@pmndrs/pointer-events'
+import { OrbitHandles } from '@pmndrs/handle'
 
 const stats = new Stats()
 document.body.appendChild(stats.dom)
@@ -26,24 +28,20 @@ directionalLight.position.set(5, 5, 5)
 scene.add(directionalLight)
 
 // Parse and interpret the uikitml - this returns a Three.js object
-const userInterface = interpret(
-  parse(
-    "<Card style='padding: 12px; align-items: center; gap: 8px;' name='123'>Hello World<GithubIcon/></Card>",
-  ),
-  {
-    ...(Icons as {}),
-    ...(Defaults as {}),
-  },
-)!
+const userInterface = interpret(parse('<div style="align-items:center; gap: 4px"><Button>Test</Button></div>'), {
+  ...(Icons as {}),
+  ...(Horizon as {}),
+  //...(Defaults as {}),
+})!
+userInterface.setProperties({ padding: 32, color: '#000', backgroundColor: '#fff' })
 scene.add(userInterface)
 
 // Position camera
 camera.position.z = 5
 
-// Add orbit controls
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true
-controls.dampingFactor = 0.05
+const { update } = forwardHtmlEvents(renderer.domElement, camera, scene)
+const orbit = new OrbitHandles(renderer.domElement, camera)
+orbit.bind(scene)
 
 function resize() {
   camera.aspect = window.innerWidth / window.innerHeight
@@ -58,7 +56,8 @@ window.addEventListener('resize', resize)
 
 // Animation loop
 function animate(delta: number) {
-  controls.update()
+  update()
+  orbit.update(delta)
   userInterface.update(delta)
   stats.update()
 

@@ -363,11 +363,11 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
   const dataUidAttr = element.attrs?.find((attr: any) => attr.name === 'data-uid')
   const dataUid = dataUidAttr?.value
 
-  if (tag in htmlElements) {
+  /*if (tag in htmlElements) {
     const { convertTo, defaultProperties: htmlDefaultProperties } = htmlElements[tag]!
     tag = convertTo ?? 'div'
     defaultProperties = htmlDefaultProperties ?? defaultProperties
-  }
+  }*/
 
   switch (tag) {
     case 'video':
