@@ -76,8 +76,8 @@ importers:
         specifier: ^1.0.32
         version: 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       '@pmndrs/uikitml':
-        specifier: ^0.0.11
-        version: 0.0.11(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+        specifier: ^0.1.1
+        version: 0.1.1(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       '@preact/signals-core':
         specifier: ^1.8.0
         version: 1.11.0
@@ -565,8 +565,8 @@ packages:
     peerDependencies:
       three: '>=0.162'
 
-  '@pmndrs/uikitml@0.0.11':
-    resolution: {integrity: sha512-n6HIjpghnfDED0h7x6omXDldsPuzILYBdx3PL2bc+hlFb2N1jGr/zIBff3QnzTczfjYoWIyHjJr745IMjAegOw==}
+  '@pmndrs/uikitml@0.1.1':
+    resolution: {integrity: sha512-XZpIJ6jXUsDpqvaCw5xBGf0/qndwCiSluH51L6Zm5DmOFk/eiZxWs12nyaQHh48rG3pEclzUD/NpssjgeKccoA==}
 
   '@preact/signals-core@1.11.0':
     resolution: {integrity: sha512-jglbibeWHuFRzEWVFY/TT7wB1PppJxmcSfUHcK+2J9vBRtiooMfw6tAPttojNYrrpdGViqAYCbPpmWYlMm+eMQ==}
@@ -3149,7 +3149,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  '@pmndrs/uikitml@0.0.11(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
+  '@pmndrs/uikitml@0.1.1(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
     dependencies:
       '@pmndrs/uikit': 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       chai: 5.2.1

@@ -132,7 +132,7 @@
     "@pmndrs/uikit-default": "^1.0.32",
     "@pmndrs/uikit-lucide": "^1.0.32",
     "@pmndrs/uikit-horizon": "^1.0.32",
-    "@pmndrs/uikitml": "^0.0.11",
+    "@pmndrs/uikitml": "^0.1.1",
     "@preact/signals-core": "^1.8.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
