@@ -1,6 +1,5 @@
 import { parse as parse5Parse, serializeOuter } from 'parse5'
 import _parseInlineCSS from 'inline-style-parser'
-import { htmlElements } from './defaults.js'
 import { conditionals } from '../index.js'
 
 const classRegex = /\.([a-zA-Z0-9_-]+)(?::([a-zA-Z0-9_-]+))?\s*{([^}]*)}/g

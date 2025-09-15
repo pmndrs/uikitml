@@ -1,4 +1,4 @@
-import { Object3D, Object3DEventMap } from 'three'
+import { Object3DEventMap } from 'three'
 import { Component, Container, Image, Input, Text, Video, Svg, StyleSheet } from '@pmndrs/uikit'
 import { ContainerElementJson, ElementJson } from '../parser/index.js'
 

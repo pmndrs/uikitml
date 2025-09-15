@@ -95,7 +95,7 @@ export function generate(
       content: Record<string, any>
     }
   >,
-  outputFiles?: Record<string, string>,
+  //outputFiles?: Record<string, string>,
 ): string {
   const classStyles = classes == null ? '' : generateClassStyles(classes)
   if (json == null) {
