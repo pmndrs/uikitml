@@ -51,4 +51,16 @@ jobs:
 
       - name: Deploy uikitml-vanilla Package
         working-directory: ./packages/uikitml
-        run: pnpm publish --access public --no-git-checks --tag alpha
+        run: pnpm publish --access public --no-git-checks --tag latest
+
+      - name: Package VS Code Extension
+        working-directory: ./extension
+        run: pnpm dlx vsce@latest package --no-dependencies
+
+      - name: Publish VS Code Extension (Marketplace)
+        working-directory: ./extension
+        run: pnpm dlx vsce@latest publish --packagePath *.vsix -p ${{ secrets.VSCE_TOKEN }} --skip-duplicate
+
+#      - name: Publish VS Code Extension (Open VSX)
+#        working-directory: ./extension
+#        run: pnpm dlx ovsx@latest publish *.vsix -p ${{ secrets.OVSX_TOKEN }} --skip-duplicate
