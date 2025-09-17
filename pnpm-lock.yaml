@@ -24,17 +24,17 @@ importers:
         specifier: ^6.6.16
         version: 6.6.26
       '@pmndrs/uikit':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       '@pmndrs/uikit-default':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       '@pmndrs/uikit-horizon':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       '@pmndrs/uikit-lucide':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       '@pmndrs/uikitml':
         specifier: workspace:^
         version: link:../../packages/uikitml
@@ -61,26 +61,26 @@ importers:
   extension:
     dependencies:
       '@pmndrs/msdfonts':
-        specifier: ^1.0.32
-        version: 1.0.32
+        specifier: ^1.0.35
+        version: 1.0.35
       '@pmndrs/pointer-events':
         specifier: ^6.6.14
         version: 6.6.26
       '@pmndrs/uikit':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       '@pmndrs/uikit-default':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       '@pmndrs/uikit-horizon':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       '@pmndrs/uikit-lucide':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       '@pmndrs/uikitml':
         specifier: latest
-        version: 0.0.11(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+        version: 0.1.3(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       '@preact/signals-core':
         specifier: ^1.8.0
         version: 1.11.0
@@ -194,8 +194,8 @@ importers:
   packages/uikitml:
     dependencies:
       '@pmndrs/uikit':
-        specifier: ^1.0.32
-        version: 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+        specifier: ^1.0.35
+        version: 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
       chai:
         specifier: ^5.2.1
         version: 5.2.1
@@ -545,31 +545,31 @@ packages:
   '@pmndrs/handle@6.6.26':
     resolution: {integrity: sha512-q1ok8oC04orYM8NvgejPvNFPcvPQFFZaKet309Xbs2izm+qXTG6E9W6mSWdChdZJ2aXsSKDQdT/RiHxZApWBxg==}
 
-  '@pmndrs/msdfonts@1.0.32':
-    resolution: {integrity: sha512-kSf4Q9IPhiFhCPJ/b5K12LtAoJwZ1rIRvHb5jvqxm3Fu94/DOld0C2AGUZ1km5ZrQGJA7xoTN2Cuo/7neo7DcA==}
+  '@pmndrs/msdfonts@1.0.35':
+    resolution: {integrity: sha512-If1qYjDENlmIdI4nn9Fjclmmv89JPkpMOfN7S3matSbcp1+bgxEnjqP3RVT7MdB+qyVoaQSBPCeqxiz3RFIt5g==}
 
   '@pmndrs/pointer-events@6.6.26':
     resolution: {integrity: sha512-QfjWB5wD5sdFdt+ulfm3WH04dV4qYQfnxaLSvGk1G3GDERKJTzngEOlTjZxt3vDAzviYmGmGFjuKlnfkQpdhaw==}
 
-  '@pmndrs/uikit-default@1.0.32':
-    resolution: {integrity: sha512-fNTXmk8JREBTotRNnRKYSisIVtKe3EWICx3sUWU14+oqrg/74IZY2tnnU6OBLbWWFXFT0qdqF3Q8TLsWCQmoAw==}
+  '@pmndrs/uikit-default@1.0.35':
+    resolution: {integrity: sha512-5JnewCIqdaom0iJZp6Uv47re8Io/vJ9v6kHFyQoDR6AyIiOmqoiuCH2I59CdV9sXu0froMEk5vE6aXegIb7CSQ==}
 
-  '@pmndrs/uikit-horizon@1.0.32':
-    resolution: {integrity: sha512-8q5ghqjDMx/aNzjJEhJGG8+Wc2osPFGPWylRwR7vKyh1BGoGeE7bg0P8+21zF1u0jyRu6k3OUBqLrj+x17UTGg==}
+  '@pmndrs/uikit-horizon@1.0.35':
+    resolution: {integrity: sha512-6iEcrNZh6S2OoSCpB8LVasGj3mBHswEimL8ATqo5m6aVb+SuOkL78Fm5bHTmhigGO4szLehfElT2yhizY/vBBg==}
 
-  '@pmndrs/uikit-lucide@1.0.32':
-    resolution: {integrity: sha512-OC1MpnNvk59/iNB7n7VVmwpqHVopC4L6r7+Wo+nQi4YwjUfgMKpu0YzugP5gve9lmICLDm/AXE5iO2hHWWgOoQ==}
+  '@pmndrs/uikit-lucide@1.0.35':
+    resolution: {integrity: sha512-e8zq1jZD2woU+sD/BoU6oSDKhkDoOhfxFbBJmfXWdcvqvmPLwXZUGsSR8IaCK9EE0pCvWr6XwtETA+chVZnkPw==}
 
-  '@pmndrs/uikit-pub-sub@1.0.32':
-    resolution: {integrity: sha512-irwdF5iQ2yUCydkoeDNFavFlKiLGI5NTiRfrvuWtu+xhzGBOyepu6OZlYaqhA5cZHpMazlOpbev4pp+aabQG4A==}
+  '@pmndrs/uikit-pub-sub@1.0.35':
+    resolution: {integrity: sha512-ErtNBK/jO/sDTLLmGlhi8DuKmg9K2e95YkZTdgyBmQPN/2T7JUuW+z9JCl0aubzYqoqxNCidbc8K6huQxgrXkw==}
 
-  '@pmndrs/uikit@1.0.32':
-    resolution: {integrity: sha512-8n+LaGFkXK1n91/FN+tRTVRoXFbwPcTCf7HoH3QEN+df1XNYT376v7rnbBLhFlnGIzewk2G7+fciMruftRRbRw==}
+  '@pmndrs/uikit@1.0.35':
+    resolution: {integrity: sha512-kwbnzN1fXUF/oP5Ai18uCuSi0aGJ3pEVRqhwYjwxZKvL0JSZEhT1ejyRLjSv0lppOFg1TYjYnUsQtUzAb4/kQw==}
     peerDependencies:
       three: '>=0.162'
 
-  '@pmndrs/uikitml@0.0.11':
-    resolution: {integrity: sha512-n6HIjpghnfDED0h7x6omXDldsPuzILYBdx3PL2bc+hlFb2N1jGr/zIBff3QnzTczfjYoWIyHjJr745IMjAegOw==}
+  '@pmndrs/uikitml@0.1.3':
+    resolution: {integrity: sha512-Jzlmt3IIgoGKuEZSmyIlRpNIuVgeMINabMvJOBQFT5H/95XZ3o5YUp61nITfxTEs6sTasaND5wly9ciouOOxww==}
 
   '@preact/signals-core@1.11.0':
     resolution: {integrity: sha512-jglbibeWHuFRzEWVFY/TT7wB1PppJxmcSfUHcK+2J9vBRtiooMfw6tAPttojNYrrpdGViqAYCbPpmWYlMm+eMQ==}
@@ -3370,64 +3370,64 @@ snapshots:
       - immer
       - react
 
-  '@pmndrs/msdfonts@1.0.32': {}
+  '@pmndrs/msdfonts@1.0.35': {}
 
   '@pmndrs/pointer-events@6.6.26': {}
 
-  '@pmndrs/uikit-default@1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
+  '@pmndrs/uikit-default@1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/uikit': 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
-      '@pmndrs/uikit-lucide': 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+      '@pmndrs/uikit': 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+      '@pmndrs/uikit-lucide': 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
     transitivePeerDependencies:
       - three
       - ts-node
 
-  '@pmndrs/uikit-default@1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
+  '@pmndrs/uikit-default@1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/uikit': 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
-      '@pmndrs/uikit-lucide': 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+      '@pmndrs/uikit': 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+      '@pmndrs/uikit-lucide': 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
     transitivePeerDependencies:
       - three
       - ts-node
 
-  '@pmndrs/uikit-horizon@1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
+  '@pmndrs/uikit-horizon@1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/uikit': 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
-      '@pmndrs/uikit-lucide': 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+      '@pmndrs/uikit': 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+      '@pmndrs/uikit-lucide': 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
     transitivePeerDependencies:
       - three
       - ts-node
 
-  '@pmndrs/uikit-horizon@1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
+  '@pmndrs/uikit-horizon@1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/uikit': 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
-      '@pmndrs/uikit-lucide': 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+      '@pmndrs/uikit': 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+      '@pmndrs/uikit-lucide': 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
     transitivePeerDependencies:
       - three
       - ts-node
 
-  '@pmndrs/uikit-lucide@1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
+  '@pmndrs/uikit-lucide@1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/uikit': 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+      '@pmndrs/uikit': 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
     transitivePeerDependencies:
       - three
       - ts-node
 
-  '@pmndrs/uikit-lucide@1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
+  '@pmndrs/uikit-lucide@1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/uikit': 1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+      '@pmndrs/uikit': 1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
     transitivePeerDependencies:
       - three
       - ts-node
 
-  '@pmndrs/uikit-pub-sub@1.0.32':
+  '@pmndrs/uikit-pub-sub@1.0.35':
     dependencies:
       '@preact/signals-core': 1.11.0
 
-  '@pmndrs/uikit@1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
+  '@pmndrs/uikit@1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/msdfonts': 1.0.32
-      '@pmndrs/uikit-pub-sub': 1.0.32
+      '@pmndrs/msdfonts': 1.0.35
+      '@pmndrs/uikit-pub-sub': 1.0.35
       '@preact/signals-core': 1.11.0
       inline-style-parser: 0.2.4
       node-html-parser: 6.1.13
@@ -3437,10 +3437,10 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  '@pmndrs/uikit@1.0.32(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
+  '@pmndrs/uikit@1.0.35(three@0.178.0)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/msdfonts': 1.0.32
-      '@pmndrs/uikit-pub-sub': 1.0.32
+      '@pmndrs/msdfonts': 1.0.35
+      '@pmndrs/uikit-pub-sub': 1.0.35
       '@preact/signals-core': 1.11.0
       inline-style-parser: 0.2.4
       node-html-parser: 6.1.13
@@ -3450,9 +3450,9 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  '@pmndrs/uikitml@0.0.11(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
+  '@pmndrs/uikitml@0.1.3(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))':
     dependencies:
-      '@pmndrs/uikit': 1.0.32(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+      '@pmndrs/uikit': 1.0.35(three@0.175.0)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
       chai: 5.2.1
       inline-style-parser: 0.2.4
       parse5: 7.3.0
@@ -5307,37 +5307,37 @@ snapshots:
       extend: 3.0.2
       postcss: 8.4.31
 
-  postcss-import@15.1.0(postcss@8.4.31):
+  postcss-import@15.1.0(postcss@8.5.6):
     dependencies:
-      postcss: 8.4.31
+      postcss: 8.5.6
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.10
 
-  postcss-js@4.0.1(postcss@8.4.31):
+  postcss-js@4.0.1(postcss@8.5.6):
     dependencies:
       camelcase-css: 2.0.1
-      postcss: 8.4.31
+      postcss: 8.5.6
 
-  postcss-load-config@4.0.2(postcss@8.4.31)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3)):
+  postcss-load-config@4.0.2(postcss@8.5.6)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3)):
     dependencies:
       lilconfig: 3.1.3
       yaml: 2.8.0
     optionalDependencies:
-      postcss: 8.4.31
+      postcss: 8.5.6
       ts-node: 10.9.2(@types/node@20.19.13)(typescript@5.8.3)
 
-  postcss-load-config@4.0.2(postcss@8.4.31)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3)):
+  postcss-load-config@4.0.2(postcss@8.5.6)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3)):
     dependencies:
       lilconfig: 3.1.3
       yaml: 2.8.0
     optionalDependencies:
-      postcss: 8.4.31
+      postcss: 8.5.6
       ts-node: 10.9.2(@types/node@24.1.0)(typescript@5.8.3)
 
-  postcss-nested@6.2.0(postcss@8.4.31):
+  postcss-nested@6.2.0(postcss@8.5.6):
     dependencies:
-      postcss: 8.4.31
+      postcss: 8.5.6
       postcss-selector-parser: 6.1.2
 
   postcss-selector-parser@6.1.2:
@@ -5709,11 +5709,11 @@ snapshots:
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.1.1
-      postcss: 8.4.31
-      postcss-import: 15.1.0(postcss@8.4.31)
-      postcss-js: 4.0.1(postcss@8.4.31)
-      postcss-load-config: 4.0.2(postcss@8.4.31)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
-      postcss-nested: 6.2.0(postcss@8.4.31)
+      postcss: 8.5.6
+      postcss-import: 15.1.0(postcss@8.5.6)
+      postcss-js: 4.0.1(postcss@8.5.6)
+      postcss-load-config: 4.0.2(postcss@8.5.6)(ts-node@10.9.2(@types/node@20.19.13)(typescript@5.8.3))
+      postcss-nested: 6.2.0(postcss@8.5.6)
       postcss-selector-parser: 6.1.2
       postcss-value-parser: 4.2.0
       resolve: 1.22.10
@@ -5737,11 +5737,11 @@ snapshots:
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.1.1
-      postcss: 8.4.31
-      postcss-import: 15.1.0(postcss@8.4.31)
-      postcss-js: 4.0.1(postcss@8.4.31)
-      postcss-load-config: 4.0.2(postcss@8.4.31)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
-      postcss-nested: 6.2.0(postcss@8.4.31)
+      postcss: 8.5.6
+      postcss-import: 15.1.0(postcss@8.5.6)
+      postcss-js: 4.0.1(postcss@8.5.6)
+      postcss-load-config: 4.0.2(postcss@8.5.6)(ts-node@10.9.2(@types/node@24.1.0)(typescript@5.8.3))
+      postcss-nested: 6.2.0(postcss@8.5.6)
       postcss-selector-parser: 6.1.2
       postcss-value-parser: 4.2.0
       resolve: 1.22.10

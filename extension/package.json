@@ -1,9 +1,9 @@
 {
   "name": "uikitml-vscode",
   "displayName": "uikitml",
-  "publisher": "threejs-uikitml",
+  "publisher": "threejs-uikit",
   "description": "",
-  "version": "0.0.0",
+  "version": "0.1.3",
   "repository": {
     "type": "git",
     "url": "git@github.com:pmndrs/uikit.git"
@@ -131,12 +131,12 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@pmndrs/msdfonts": "^1.0.32",
+    "@pmndrs/msdfonts": "^1.0.35",
     "@pmndrs/pointer-events": "^6.6.14",
-    "@pmndrs/uikit": "^1.0.32",
-    "@pmndrs/uikit-default": "^1.0.32",
-    "@pmndrs/uikit-lucide": "^1.0.32",
-    "@pmndrs/uikit-horizon": "^1.0.32",
+    "@pmndrs/uikit": "^1.0.35",
+    "@pmndrs/uikit-default": "^1.0.35",
+    "@pmndrs/uikit-lucide": "^1.0.35",
+    "@pmndrs/uikit-horizon": "^1.0.35",
     "@pmndrs/uikitml": "latest",
     "@preact/signals-core": "^1.8.0",
     "@types/react": "^19.1.6",

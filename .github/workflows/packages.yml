@@ -63,6 +63,6 @@ jobs:
         working-directory: ./extension
         run: pnpm dlx vsce@latest publish --packagePath *.vsix -p ${{ secrets.VSCE_TOKEN }} --skip-duplicate
 
-#      - name: Publish VS Code Extension (Open VSX)
-#        working-directory: ./extension
-#        run: pnpm dlx ovsx@latest publish *.vsix -p ${{ secrets.OVSX_TOKEN }} --skip-duplicate
+      - name: Publish VS Code Extension (Open VSX)
+        working-directory: ./extension
+        run: pnpm dlx ovsx@latest publish *.vsix -p ${{ secrets.OVSX_TOKEN }} --skip-duplicate

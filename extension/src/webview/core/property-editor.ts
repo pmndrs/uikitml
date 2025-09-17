@@ -149,7 +149,6 @@ export class PropertyEditor {
     if (componentId) {
       const { ranges } = useComponentStore.getState();
       const rangeInfo = ranges?.[`__id__${componentId}`];
-      console.log(`__id__${componentId}`, rangeInfo, ranges);
       this.vscode.postMessage({
         command: "jump-to",
         rangeInfo: rangeInfo,
