@@ -159,8 +159,8 @@ function initializeApp() {
           // Build a kit map with kebab-case aliases (e.g., RadioGroup -> radio-group)
           // const kitWithAliases: Record<string, any> = { ...(defaultKit as any) };
           const uiContent = interpret(uijson, {
-            ...(defaultIcons as {}),
-            ...(horizonKit as {}),
+            //...(defaultIcons as {}),
+            //...(horizonKit as {}),
           })
 
           if (uiContent) {

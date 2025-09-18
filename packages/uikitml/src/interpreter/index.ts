@@ -78,7 +78,8 @@ function interpretElement(json: ElementJson | string, kit?: Kit) {
       break
 
     default:
-      console.warn(`Unknown element type: ${(json as any).type}, falling back to container`)
+      //remove for now until we figured out a "html kit"
+      //console.warn(`Unknown element type: ${(json as any).type}, falling back to container`)
       element = new Container(properties)
       break
   }
