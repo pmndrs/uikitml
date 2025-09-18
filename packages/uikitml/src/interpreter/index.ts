@@ -155,7 +155,7 @@ function createCustomElement(
       componentName,
       sourceTag: json.sourceTag,
     }
-    console.warn(`Custom component '${componentName}' not found in kit, falling back to Container`)
+    //console.warn(`Custom component '${componentName}' not found in kit, falling back to Container`)
     return element
   }
 }
