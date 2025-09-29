@@ -101,7 +101,7 @@ export function parse(
 function mergeCssIntoTarget(
   cssText: string,
   target: Record<string, { origin?: string; content: Record<string, any> }>,
-  origin?: string
+  origin?: string,
 ): void {
   // Extract regular CSS classes
   let match: RegExpExecArray | null
@@ -153,7 +153,7 @@ function mergeCssIntoTarget(
 function processLinkElements(
   document: any,
   config: ParseConfig | undefined,
-  target: Record<string, { origin?: string; content: Record<string, any> }>
+  target: Record<string, { origin?: string; content: Record<string, any> }>,
 ): void {
   const resolveFile = config?.resolveFile
   if (resolveFile == null) {
@@ -187,7 +187,7 @@ function processLinkElements(
 }
 function processInlineStyles(
   document: any,
-  target: Record<string, { origin?: string; content: Record<string, any> }>
+  target: Record<string, { origin?: string; content: Record<string, any> }>,
 ): void {
   const traverseElements = (element: any): void => {
     if (element.nodeName === 'style' && element.childNodes) {
@@ -356,26 +356,19 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
 
   let tag = sourceTag
   const properties = toUikitProperties(element.attrs || [])
-  let defaultProperties = {}
 
   // Extract dataUid from attributes
   const dataUidAttr = element.attrs?.find((attr: any) => attr.name === 'data-uid')
   const dataUid = dataUidAttr?.value
 
-  /*if (tag in htmlElements) {
-    const { convertTo, defaultProperties: htmlDefaultProperties } = htmlElements[tag]!
-    tag = convertTo ?? 'div'
-    defaultProperties = htmlDefaultProperties ?? defaultProperties
-  }*/
-
   switch (tag) {
     case 'video':
+    case 'textarea':
     case 'input':
       return {
         type: tag,
         sourceTag,
         properties,
-        defaultProperties,
         dataUid,
       }
     case 'img':
@@ -384,7 +377,6 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
         type: srcAttr?.value?.endsWith('.svg') ? 'svg' : 'image',
         sourceTag,
         properties,
-        defaultProperties,
         dataUid,
       }
     case 'svg':
@@ -395,7 +387,6 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
         sourceTag,
         properties,
         text: serializeOuter(cleanedElement),
-        defaultProperties,
         dataUid,
       }
     case 'div':
@@ -404,7 +395,6 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
         sourceTag,
         children,
         properties,
-        defaultProperties,
         dataUid,
       }
   }
@@ -414,7 +404,6 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
     type: 'custom',
     children,
     properties,
-    defaultProperties,
     dataUid,
   }
 }
@@ -427,13 +416,13 @@ export type ElementJson =
   | SvgElementJson
   | VideoElementJson
   | InputElementJson
+  | TextareaElementJson
 
 export type CustomElementJson = {
   type: 'custom'
   children: ReadonlyArray<ElementJson | string>
   properties: Record<string, any>
   sourceTag: string
-  defaultProperties: Record<string, any>
   dataUid?: string
 }
 
@@ -443,7 +432,6 @@ export type ContainerElementJson = {
   properties: Record<string, any>
   //for re-converting to .uikitml
   sourceTag: string
-  defaultProperties: Record<string, any>
   dataUid?: string
 }
 
@@ -452,7 +440,6 @@ export type ImageElementJson = {
   properties: Record<string, any>
   //for re-converting to .uikitml
   sourceTag: string
-  defaultProperties: Record<string, any>
   dataUid?: string
 }
 
@@ -462,7 +449,6 @@ export type InlineSvgElementJson = {
   properties: Record<string, any>
   //for re-converting to .uikitml
   sourceTag: string
-  defaultProperties: Record<string, any>
   dataUid?: string
 }
 
@@ -471,7 +457,6 @@ export type SvgElementJson = {
   properties: Record<string, any>
   //for re-converting to .uikitml
   sourceTag: string
-  defaultProperties: Record<string, any>
   dataUid?: string
 }
 
@@ -480,7 +465,6 @@ export type VideoElementJson = {
   properties: Record<string, any>
   //for re-converting to .uikitml
   sourceTag: string
-  defaultProperties: Record<string, any>
   dataUid?: string
 }
 
@@ -489,7 +473,14 @@ export type InputElementJson = {
   properties: Record<string, any>
   //for re-converting to .uikitml
   sourceTag: string
-  defaultProperties: Record<string, any>
+  dataUid?: string
+}
+
+export type TextareaElementJson = {
+  type: 'textarea'
+  properties: Record<string, any>
+  //for re-converting to .uikitml
+  sourceTag: string
   dataUid?: string
 }
 

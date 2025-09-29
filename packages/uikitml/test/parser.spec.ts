@@ -54,7 +54,7 @@ describe('html parser', () => {
             src: 'test.mp4',
             autoplay: '',
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -71,7 +71,7 @@ describe('html parser', () => {
             type: 'text',
             value: 'test',
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -88,7 +88,7 @@ describe('html parser', () => {
             src: 'test.jpg',
             alt: 'test',
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -105,7 +105,7 @@ describe('html parser', () => {
             src: 'test.svg',
             alt: 'test',
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -119,7 +119,7 @@ describe('html parser', () => {
           sourceTag: 'svg',
           properties: {},
           text: '<svg><circle cx="50" cy="50" r="40"></circle></svg>',
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -134,29 +134,29 @@ describe('html parser', () => {
           sourceTag: 'div',
           children: [
             {
-              type: 'container',
+              type: 'custom',
               sourceTag: 'p',
               children: ['Hello'],
               properties: {},
-              defaultProperties: {},
+              
             },
             {
-              type: 'container',
+              type: 'custom',
               sourceTag: 'p',
               children: ['World'],
               properties: {},
-              defaultProperties: {},
+              
             },
           ],
           properties: {},
-          defaultProperties: {},
+          
         },
         classes: {},
       })
     })
   })
 
-  describe('default html elements', () => {
+  /*describe('default html elements', () => {
     it('should parse h1-h6 with correct default properties', () => {
       const h1Result = parse('<h1>Title</h1>')
 
@@ -204,7 +204,7 @@ describe('html parser', () => {
               sourceTag: 'li',
               children: ['Item'],
               properties: {},
-              defaultProperties: {},
+              
             },
           ],
           properties: {},
@@ -227,7 +227,7 @@ describe('html parser', () => {
               sourceTag: 'li',
               children: ['Item'],
               properties: {},
-              defaultProperties: {},
+              
             },
           ],
           properties: {},
@@ -292,7 +292,7 @@ describe('html parser', () => {
         classes: {},
       })
     })
-  })
+  })*/
 
   describe('custom elements', () => {
     it('should parse custom element as type custom', () => {
@@ -306,7 +306,7 @@ describe('html parser', () => {
           properties: {
             dataTest: 'value',
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -329,7 +329,7 @@ describe('html parser', () => {
               positionTop: '5px',
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -349,7 +349,7 @@ describe('html parser', () => {
               fontSize: '16px',
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -455,7 +455,7 @@ describe('html parser', () => {
           properties: {
             id: 'myButton',
           },
-          defaultProperties: {},
+          
         },
         classes: {
           __id__myButton: {
@@ -494,7 +494,7 @@ describe('html parser', () => {
               },
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -505,7 +505,7 @@ describe('html parser', () => {
 
       expectParseResult(result, {
         element: {
-          type: 'container',
+          type: 'custom',
           sourceTag: 'button',
           children: ['Click me'],
           properties: {
@@ -515,11 +515,6 @@ describe('html parser', () => {
                 backgroundColor: 'blue',
               },
             },
-          },
-          defaultProperties: {
-            verticalAlign: 'middle',
-            textAlign: 'center',
-            cursor: 'pointer',
           },
         },
         classes: {},
@@ -542,7 +537,7 @@ describe('html parser', () => {
             },
             type: 'text',
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -569,7 +564,7 @@ describe('html parser', () => {
               },
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -593,7 +588,7 @@ describe('html parser', () => {
               },
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -623,7 +618,7 @@ describe('html parser', () => {
               },
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -646,7 +641,7 @@ describe('html parser', () => {
               },
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -665,7 +660,7 @@ describe('html parser', () => {
               hover: {},
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -689,7 +684,7 @@ describe('html parser', () => {
               },
             },
           },
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -729,7 +724,7 @@ describe('html parser', () => {
           properties: {
             class: 'text-red',
           },
-          defaultProperties: {},
+          
         },
         classes: {
           'text-red': {
@@ -786,16 +781,11 @@ describe('html parser', () => {
 
       expectParseResult(result, {
         element: {
-          type: 'container',
+          type: 'custom',
           sourceTag: 'button',
           children: ['Click me'],
           properties: {
             class: 'btn btn-primary',
-          },
-          defaultProperties: {
-            verticalAlign: 'middle',
-            textAlign: 'center',
-            cursor: 'pointer',
           },
         },
         classes: {
@@ -826,7 +816,7 @@ describe('html parser', () => {
           sourceTag: 'div',
           children: ['Hello'],
           properties: {},
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -845,7 +835,7 @@ describe('html parser', () => {
           sourceTag: 'div',
           children: ['Hello'],
           properties: {},
-          defaultProperties: {},
+          
         },
         classes: {},
       })
@@ -869,7 +859,7 @@ describe('html parser', () => {
           sourceTag: 'div',
           children: ['Hello'],
           properties: {},
-          defaultProperties: {},
+          
         },
         classes: {},
       })

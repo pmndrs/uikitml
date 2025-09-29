@@ -1,8 +1,9 @@
 import { expect } from 'chai'
 import { JSDOM } from 'jsdom'
-import { Container, Text, Image, Input, StyleSheet } from '@pmndrs/uikit'
+import { Container, Text, Image, Input, StyleSheet, Textarea } from '@pmndrs/uikit'
 import { interpret, Kit, getElementDescription } from '../src/interpreter/index.js'
 import { parse } from '../src/parser/index.js'
+import { Object3D } from 'three'
 
 // Minimal DOM setup for uikit components
 const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>')
@@ -23,8 +24,12 @@ function safeInterpret(html: string, kit?: Kit) {
   if (!parsed.element) {
     throw new Error(`Failed to parse: ${html}`)
   }
+  const result = interpret(parsed, kit)
+  if (result != null) {
+    new Object3D().add(result)
+  }
   return {
-    result: interpret(parsed, kit),
+    result,
     classes: parsed.classes,
     element: parsed.element,
   }
@@ -45,13 +50,12 @@ describe('interpreter', () => {
     it('should interpret container elements', () => {
       const { result } = safeInterpret('<div><span>Content</span></div>')
       expect(result).to.be.instanceOf(Container)
-      expect(result?.children).to.have.length(1)
-      expect(result?.children[0]).to.be.instanceOf(Text)
+      expect(result?.children[0]?.children[0]).to.be.instanceOf(Text)
     })
 
-    it('should optimize single text child containers to Text elements', () => {
+    it('should handle single text', () => {
       const { result } = safeInterpret('<div>Hello</div>')
-      expect(result).to.be.instanceOf(Text)
+      expect(result?.children[0]).to.be.instanceOf(Text)
     })
 
     it('should interpret image elements', () => {
@@ -64,9 +68,9 @@ describe('interpreter', () => {
       expect(result).to.be.instanceOf(Input)
     })
 
-    it('should interpret textarea as input with multiline', () => {
+    it('should interpret textarea as textarea', () => {
       const { result } = safeInterpret('<textarea>Some text</textarea>')
-      expect(result).to.be.instanceOf(Input)
+      expect(result).to.be.instanceOf(Textarea)
     })
   })
 
@@ -148,7 +152,8 @@ describe('interpreter', () => {
         <div class="text-style">Single text</div>
       `
       const { result } = safeInterpret(htmlWithStyles)
-      expect(result).to.be.instanceOf(Text)
+      expect(result?.children[0]).to.be.instanceOf(Text)
+      expect((result?.children[0] as Text).properties.peek().color).to.be.equal('green')
     })
   })
 
@@ -214,13 +219,13 @@ describe('interpreter', () => {
       const { result } = safeInterpret('<div><p>Paragraph</p><span>Span</span></div>')
       expect(result).to.be.instanceOf(Container)
       expect(result?.children).to.have.length(2)
-      expect(result?.children[0]).to.be.instanceOf(Text)
-      expect(result?.children[1]).to.be.instanceOf(Text)
+      expect(result?.children[0]?.children[0]).to.be.instanceOf(Text)
+      expect(result?.children[1]?.children[0]).to.be.instanceOf(Text)
     })
 
     it('should not process children for Text elements', () => {
       const { result } = safeInterpret('<div>Single text</div>')
-      expect(result).to.be.instanceOf(Text)
+      expect(result?.children[0]).to.be.instanceOf(Text)
     })
 
     it('should recursively interpret children with kit', () => {
@@ -282,7 +287,7 @@ describe('interpreter', () => {
       expect(result).to.be.instanceOf(Container)
       expect(result?.children).to.have.length(3)
       expect(result?.children[0]).to.be.instanceOf(Image)
-      expect(result?.children[1]).to.be.instanceOf(Text)
+      expect(result?.children[1]?.children[0]).to.be.instanceOf(Text)
       expect(result?.children[2]).to.be.instanceOf(Input)
     })
   })
@@ -332,7 +337,7 @@ describe('interpreter', () => {
     it('should describe textarea elements', () => {
       const { element } = safeInterpret('<textarea>Content</textarea>')
       const description = getElementDescription(element)
-      expect(description).to.equal('Input (textarea, multiline)')
+      expect(description).to.equal('Input (textarea)')
     })
 
     it('should describe unknown element types', () => {
@@ -344,6 +349,14 @@ describe('interpreter', () => {
       }
       const description = getElementDescription(unknownElement)
       expect(description).to.equal('Unknown: unknown')
+    })
+  })
+
+  describe('text child', () => {
+    it('should forward to text element', () => {
+      const { result } = safeInterpret('<span>Content</span>')
+      result?.setProperties({ text: 'ABC' } as any)
+      expect((result?.children[0] as Text).properties.peek().text).to.equal('ABC')
     })
   })
 })

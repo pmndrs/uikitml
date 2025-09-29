@@ -9,6 +9,9 @@ const HtmlInlineScriptPlugin = require("html-inline-script-webpack-plugin");
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
 
+// Resolve a single canonical path for @pmndrs/uikit to avoid duplicates across the monorepo
+const uikitPackageRoot = path.dirname(require.resolve("@pmndrs/uikit/package.json"));
+
 /** @type WebpackConfig */
 const extensionConfig = {
   target: "node", // VS Code extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
@@ -28,6 +31,12 @@ const extensionConfig = {
   resolve: {
     // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
     extensions: [".ts", ".js"],
+    // Allow workspace packages that import .js to resolve .ts sources
+    extensionAlias: {
+      ".js": [".ts", ".js"],
+      ".mjs": [".mts", ".mjs"],
+      ".cjs": [".cts", ".cjs"],
+    },
   },
   module: {
     rules: [
@@ -62,7 +71,15 @@ const webviewConfig = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+    // Allow workspace packages that import .js to resolve .ts sources
+    extensionAlias: {
+      ".js": [".ts", ".js"],
+      ".mjs": [".mts", ".mjs"],
+      ".cjs": [".cts", ".cjs"],
+    },
     alias: {
+      // Deduplicate @pmndrs/uikit by pinning to a single resolved path
+      "@pmndrs/uikit": uikitPackageRoot,
       // Some kit builds reference internal uikit source paths; alias them to dist
       "@pmndrs/uikit/src/utils.js": require.resolve("@pmndrs/uikit/dist/utils.js"),
     },
@@ -119,6 +136,12 @@ const serverConfig = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    // Allow workspace packages that import .js to resolve .ts sources
+    extensionAlias: {
+      ".js": [".ts", ".js"],
+      ".mjs": [".mts", ".mjs"],
+      ".cjs": [".cts", ".cjs"],
+    },
   },
   module: {
     rules: [

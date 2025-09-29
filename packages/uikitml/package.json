@@ -3,7 +3,8 @@
   "version": "0.0.11",
   "type": "module",
   "dependencies": {
-    "@pmndrs/uikit": "^1.0.35",
+    "@pmndrs/uikit": "^1.0.36",
+    "@preact/signals-core": "^1.11.0",
     "chai": "^5.2.1",
     "inline-style-parser": "^0.2.4",
     "parse5": "^7.1.2"
@@ -15,6 +16,7 @@
     "@types/three": "^0.178.1",
     "jsdom": "^26.1.0",
     "mocha": "^11.7.1",
+    "three": "^0.178.0",
     "ts-node": "^10.9.2"
   },
   "scripts": {

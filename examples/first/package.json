@@ -9,12 +9,12 @@
         "@pmndrs/handle": "^6.6.16",
         "@pmndrs/pointer-events": "^6.6.16",
         "@pmndrs/uikitml": "workspace:^",
-        "@pmndrs/uikit-default": "^1.0.35",
-        "@pmndrs/uikit-horizon": "^1.0.35",
-        "@pmndrs/uikit-lucide": "^1.0.35",
+        "@pmndrs/uikit-default": "^1.0.36",
+        "@pmndrs/uikit-horizon": "^1.0.36",
+        "@pmndrs/uikit-lucide": "^1.0.36",
         "stats.js": "^0.17.0",
         "three": "^0.178.0",
-        "@pmndrs/uikit": "^1.0.35"
+        "@pmndrs/uikit": "^1.0.36"
     },
     "devDependencies": {
         "@types/stats.js": "^0.17.4",

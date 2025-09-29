@@ -28,7 +28,7 @@ directionalLight.position.set(5, 5, 5)
 scene.add(directionalLight)
 
 // Parse and interpret the uikitml - this returns a Three.js object
-const userInterface = interpret(parse('<div style="align-items:center; gap: 4px"><Button>Test</Button></div>'), {
+const userInterface = interpret(parse('<div style="align-items:center; gap: 4px"><Button style="text-align: center">Test</Button></div>'), {
   ...(Icons as {}),
   ...(Horizon as {}),
   //...(Defaults as {}),

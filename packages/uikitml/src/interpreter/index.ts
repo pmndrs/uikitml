@@ -1,9 +1,10 @@
-import { Object3DEventMap } from 'three'
-import { Component, Container, Image, Input, Text, Video, Svg, StyleSheet } from '@pmndrs/uikit'
+import { Component, Container, Image, Input, Text, Video, Svg, StyleSheet, Textarea } from '@pmndrs/uikit'
 import { ContainerElementJson, ElementJson } from '../parser/index.js'
+import { computed } from '@preact/signals-core'
+import { htmlKit } from './html.js'
 
 export interface Kit {
-  [componentName: string]: new (props?: any) => Component<Object3DEventMap>
+  [componentName: string]: new (props?: any) => Component
 }
 export function interpret(
   parseResult: {
@@ -23,16 +24,26 @@ export function interpret(
     }
   }
 
-  return interpretElement(parseResult.element, kit)
+  const kitEntries = Object.entries(htmlKit)
+  if (kit != null) {
+    kitEntries.unshift(...Object.entries(kit))
+  }
+
+  return interpretElement(parseResult.element, kitEntries)
 }
 
-function interpretElement(json: ElementJson | string, kit?: Kit) {
+function interpretElement(json: ElementJson | string, kit?: Array<[string, new (props?: any) => Component]>) {
   if (json === null || json === undefined) {
     return null
   }
 
   if (typeof json === 'string') {
-    return new Text({ text: json })
+    const text: Text = new Text({
+      text: computed(() => (text.parentContainer.value?.properties.value as any).text ?? json),
+      width: '100%',
+      height: '100%',
+    })
+    return text
   }
 
   const properties = { ...json.properties }
@@ -41,12 +52,8 @@ function interpretElement(json: ElementJson | string, kit?: Kit) {
     delete properties.style
   }
 
-  if (json.defaultProperties) {
-    Object.assign(properties, json.defaultProperties, properties)
-  }
-
   const elementId: string | undefined = properties.id
-  let element: Component<Object3DEventMap>
+  let element: Component
 
   switch (json.type) {
     case 'container':
@@ -77,10 +84,13 @@ function interpretElement(json: ElementJson | string, kit?: Kit) {
       element = createInputElement(json, properties)
       break
 
+    case 'textarea':
+      element = createTextareaElement(json, properties)
+      break
+
     default:
-      //remove for now until we figured out a "html kit"
-      //console.warn(`Unknown element type: ${(json as any).type}, falling back to container`)
-      element = new Container(properties)
+      //omit the kit intentionally because we are falling back to an unknown uikit kit component
+      element = createCustomElement(json, properties)
       break
   }
 
@@ -126,21 +136,16 @@ function createContainerElement(
   json: ElementJson & { type: 'container' },
   properties: Record<string, any>,
 ): Container | Text {
-  if (json.children && json.children.length === 1 && typeof json.children[0] === 'string') {
-    return new Text({ ...properties, text: json.children[0] })
-  }
-
   return new Container(properties)
 }
 
 function createCustomElement(
   json: ElementJson & { type: 'custom' },
   properties: Record<string, any>,
-  kit?: Kit,
-): Component<Object3DEventMap> {
+  kit?: Array<[string, new (props?: any) => Component]>,
+): Component {
   const componentName = json.sourceTag
-  const CustomComponent =
-    kit == null ? undefined : Object.entries(kit).find(([name]) => name.toLowerCase() === componentName)?.[1]
+  const CustomComponent = kit == null ? undefined : kit.find(([name]) => name.toLowerCase() === componentName)?.[1]
 
   if (CustomComponent) {
     const element = new CustomComponent(properties)
@@ -195,11 +200,11 @@ function createVideoElement(_json: ElementJson & { type: 'video' }, properties: 
   return new Video(properties)
 }
 
-function createInputElement(json: ElementJson & { type: 'input' }, properties: Record<string, any>): Input {
-  if (json.sourceTag === 'textarea' && !properties.multiline) {
-    properties.multiline = true
-  }
+function createTextareaElement(json: ElementJson & { type: 'textarea' }, properties: Record<string, any>): Input {
+  return new Textarea(properties)
+}
 
+function createInputElement(json: ElementJson & { type: 'input' }, properties: Record<string, any>): Input {
   return new Input(properties)
 }
 
@@ -222,9 +227,8 @@ export function getElementDescription(json: ElementJson | string): string {
     case 'video':
       return `Video: ${json.properties?.src || 'no src'}`
     case 'input':
-      return `Input (${json.sourceTag}${
-        json.properties?.multiline || json.defaultProperties?.multiline ? ', multiline' : ''
-      })`
+    case 'textarea':
+      return `Input (${json.sourceTag}${json.properties?.multiline ? ', multiline' : ''})`
     default:
       return `Unknown: ${(json as any).type}`
   }
