@@ -133,7 +133,7 @@ function interpretElement(json: ElementJson | string, kit?: Array<[string, new (
 }
 
 function createContainerElement(
-  json: ElementJson & { type: 'container' },
+  _json: ElementJson & { type: 'container' },
   properties: Record<string, any>,
 ): Container | Text {
   return new Container(properties)
@@ -200,11 +200,11 @@ function createVideoElement(_json: ElementJson & { type: 'video' }, properties: 
   return new Video(properties)
 }
 
-function createTextareaElement(json: ElementJson & { type: 'textarea' }, properties: Record<string, any>): Input {
+function createTextareaElement(_json: ElementJson & { type: 'textarea' }, properties: Record<string, any>): Input {
   return new Textarea(properties)
 }
 
-function createInputElement(json: ElementJson & { type: 'input' }, properties: Record<string, any>): Input {
+function createInputElement(_json: ElementJson & { type: 'input' }, properties: Record<string, any>): Input {
   return new Input(properties)
 }
 
