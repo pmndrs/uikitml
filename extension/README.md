@@ -10,7 +10,7 @@ UIKitML is a VS Code extension that brings visual development tools to [@pmndrs/
 
 A complete visual development environment for your 3D UIs.
 
-![Three.js Inspector Demo](images/inspector-demo.gif)
+<video src="videos/inspector-demo.mp4" autoplay loop muted playsinline></video>
 
 **Features:**
 
@@ -27,7 +27,7 @@ Open any `.uikitml` file and click the **Preview** button in the editor toolbar 
 
 Full language support with intelligent autocomplete, validation, and documentation.
 
-![Language Server Features](images/language-server-demo.gif)
+<video src="videos/language-server-demo.mp4" autoplay loop muted playsinline></video>
 
 **Features:**
 
@@ -45,7 +45,7 @@ The language server runs automatically when you open `.uikitml` files.
 
 Access ready-to-use component libraries with validation and discovery.
 
-![Component Kits Demo](images/component-kits-demo.gif)
+<video src="videos/component-kits-demo.mp4" autoplay loop muted playsinline></video>
 
 **Features:**
 
