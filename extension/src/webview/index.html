@@ -202,6 +202,72 @@
         opacity: 0.4;
         cursor: not-allowed;
       }
+      /* Kit Selector Styles */
+      .kit-selector {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
+      .kit-selector-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        background: var(--panel-dark-grey);
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        color: var(--text-white);
+        border: 1px solid var(--panel-grey);
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 120px;
+        justify-content: space-between;
+      }
+      .kit-selector-button:hover {
+        background: var(--panel-grey);
+        border-color: var(--panel-light-grey);
+      }
+      .dropdown-arrow {
+        font-size: 0.6rem;
+        color: var(--panel-light-grey);
+      }
+      .kit-selector-dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
+        min-width: 160px;
+        background: var(--panel-dark-grey);
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        border: 1px solid var(--panel-grey);
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        padding: 6px 0;
+      }
+      .kit-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        color: var(--text-white);
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+      .kit-option:hover {
+        background: var(--panel-grey);
+      }
+      .kit-option input[type="checkbox"] {
+        cursor: pointer;
+        width: 14px;
+        height: 14px;
+      }
+      .kit-option span {
+        user-select: none;
+      }
     </style>
   </body>
 </html>

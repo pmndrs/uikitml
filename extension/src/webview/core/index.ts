@@ -1,27 +1,16 @@
-import {
-  Clock,
-  Color,
-  Group,
-  LinearSRGBColorSpace,
-  MathUtils,
-  Object3D,
-  PerspectiveCamera,
-  Scene,
-  WebGLRenderer,
-} from 'three'
+import { Clock, Color, Group, MathUtils, Object3D, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { Component, Container, reversePainterSortStable } from '@pmndrs/uikit'
 import { interpret, parse } from '@pmndrs/uikitml'
 import * as defaultKit from '@pmndrs/uikit-default'
 import * as defaultIcons from '@pmndrs/uikit-lucide'
 import * as horizonKit from '@pmndrs/uikit-horizon'
 
-import { PropertiesPanel } from '../ui/components'
+import { PropertiesPanel, KitSelector } from '../ui/components'
 import React from 'react'
 import { createInspectorContainer } from './inspector'
 import { createRoot } from 'react-dom/client'
 import { forwardHtmlEvents } from '@pmndrs/pointer-events'
-import { isEqual } from 'lodash'
-import { useComponentStore } from '../ui/store'
+import { useComponentStore, KitName } from '../ui/store'
 
 declare const acquireVsCodeApi: () => any
 const vscode = acquireVsCodeApi()
@@ -32,8 +21,35 @@ let currentJson: any | undefined = undefined
 
 const fovY = 75
 
+// Helper function to build the combined kit based on selected kit names
+function buildKitFromSelection(selectedKits: KitName[]): Record<string, any> {
+  const combinedKit: Record<string, any> = {}
+
+  for (const kitName of selectedKits) {
+    let kit: Record<string, any> | undefined
+
+    switch (kitName) {
+      case 'uikit-default':
+        kit = defaultKit as Record<string, any>
+        break
+      case 'uikit-lucide':
+        kit = defaultIcons as Record<string, any>
+        break
+      case 'uikit-horizon':
+        kit = horizonKit as Record<string, any>
+        break
+    }
+
+    if (kit) {
+      Object.assign(combinedKit, kit)
+    }
+  }
+
+  return combinedKit
+}
+
 function initializeApp() {
-  // Mount React app
+  // Mount React app for properties panel
   const reactRoot = document.getElementById('react-root')!
   const root = createRoot(reactRoot)
 
@@ -53,6 +69,13 @@ function initializeApp() {
     ),
   )
 
+  // Mount KitSelector in canvas container
+  const canvasContainer = document.getElementById('canvas-container')!
+  const kitSelectorContainer = document.createElement('div')
+  canvasContainer.appendChild(kitSelectorContainer)
+  const kitSelectorRoot = createRoot(kitSelectorContainer)
+  kitSelectorRoot.render(React.createElement(KitSelector))
+
   // Setup Three.js scene
   const scene = new Scene()
   scene.background = new Color(0x1d1d1d)
@@ -68,7 +91,6 @@ function initializeApp() {
   // Create canvas and append to container
   const canvas = renderer.domElement
   canvas.style.position = 'absolute'
-  const canvasContainer = document.getElementById('canvas-container')!
   canvasContainer.appendChild(canvas)
 
   // Function to update renderer and camera based on canvas size
@@ -135,103 +157,116 @@ function initializeApp() {
 
   renderer.setPixelRatio(window.devicePixelRatio)
 
-  const uiAnchor = new Group()
+  let uiAnchor = new Group()
   scene.add(uiAnchor)
   let uiRoot: Container | undefined
   let sizeUnsubscribe: (() => void) | undefined
+  let lastMessageText: string | undefined // Track last message text for re-interpretation
+
+  // Function to rebuild UI with current kits
+  const rebuildUIWithCurrentKits = () => {
+    if (!lastMessageText) {
+      return
+    }
+
+    const uijson = parse(lastMessageText)
+    const { ranges, element, classes } = uijson
+
+    // Get the currently selected component's ID before rebuilding
+    const { selectedComponent, selectedKits } = useComponentStore.getState()
+    const previousSelectedId = selectedComponent?.userData?.id || (selectedComponent?.properties?.value as any)?.id
+
+    // Build kit based on selected kits from store
+    const combinedKit = buildKitFromSelection(selectedKits)
+    const uiContent = interpret(uijson, combinedKit)
+
+    if (uiContent) {
+      const componentUidMap = new Map<string, Component<any>>()
+      const traverseAndMapUids = (obj: Object3D) => {
+        if (obj instanceof Component) {
+          const uid = obj.userData?.dataUid
+          if (uid) {
+            componentUidMap.set(uid, obj as Component<any>)
+          }
+        }
+        for (const child of obj.children) {
+          traverseAndMapUids(child)
+        }
+      }
+      traverseAndMapUids(uiContent)
+
+      // Unsubscribe from previous uiRoot size changes
+      if (sizeUnsubscribe) {
+        sizeUnsubscribe()
+        sizeUnsubscribe = undefined
+      }
+
+      if (uiRoot) {
+        uiAnchor.remove(uiRoot)
+        uiRoot.dispose()
+      }
+
+      uiRoot = new Container()
+      const { setRootContainer, setSelectedComponent, setUikitData } = useComponentStore.getState()
+      setRootContainer(uiContent as Component<any>)
+      setUikitData({ ranges, element, classes })
+
+      // Subscribe to size changes and perform initial scaling
+      sizeUnsubscribe = uiRoot.size.subscribe(() => {
+        scaleToFitScreen()
+      })
+
+      // Perform initial scaling
+      scaleToFitScreen()
+
+      // If we had a selected component, try to find and re-select it
+      if (previousSelectedId) {
+        const foundComponent = componentUidMap.get(previousSelectedId)
+        if (foundComponent) {
+          setSelectedComponent(foundComponent)
+        } else {
+          // Component not found, clear selection
+          setSelectedComponent(null)
+        }
+      }
+
+      uiAnchor.add(
+        uiRoot.add(
+          createInspectorContainer(uiContent, (dataUid) => {
+            vscode.postMessage({
+              command: 'jump-to',
+              rangeInfo: ranges?.[dataUid],
+            })
+            // Find the component by uid and set it as selected
+            const foundComponent = componentUidMap.get(dataUid)
+            if (foundComponent) {
+              const { setSelectedComponent } = useComponentStore.getState()
+              setSelectedComponent(foundComponent)
+            }
+          }),
+        ),
+      )
+    }
+  }
+
+  // Subscribe to kit selection changes
+  let previousKits = useComponentStore.getState().selectedKits
+  useComponentStore.subscribe((state) => {
+    const currentKits = state.selectedKits
+    // Check if kits changed
+    if (JSON.stringify(currentKits) !== JSON.stringify(previousKits)) {
+      previousKits = currentKits
+      // Re-interpret with current kits
+      rebuildUIWithCurrentKits()
+    }
+  })
 
   window.addEventListener('message', (event: MessageEvent) => {
     const message = event.data
     switch (message.command) {
       case 'update':
-        const uijson = parse(message.text)
-
-        const { ranges, element, classes } = uijson
-
-        if (uijson && !isEqual(uijson, currentJson)) {
-          currentJson = uijson
-
-          // Get the currently selected component's ID before rebuilding
-          const { selectedComponent } = useComponentStore.getState()
-          const previousSelectedId =
-            selectedComponent?.userData?.id || (selectedComponent?.properties?.value as any)?.id
-
-          // Build a kit map with kebab-case aliases (e.g., RadioGroup -> radio-group)
-          // const kitWithAliases: Record<string, any> = { ...(defaultKit as any) };
-          const uiContent = interpret(uijson, {
-            //...(defaultIcons as {}),
-            //...(horizonKit as {}),
-          })
-
-          if (uiContent) {
-            const componentUidMap = new Map<string, Component<any>>()
-            const traverseAndMapUids = (obj: Object3D) => {
-              if (obj instanceof Component) {
-                const uid = obj.userData?.dataUid
-                if (uid) {
-                  componentUidMap.set(uid, obj as Component<any>)
-                }
-              }
-              for (const child of obj.children) {
-                traverseAndMapUids(child)
-              }
-            }
-            traverseAndMapUids(uiContent)
-
-            // Unsubscribe from previous uiRoot size changes
-            if (sizeUnsubscribe) {
-              sizeUnsubscribe()
-              sizeUnsubscribe = undefined
-            }
-
-            if (uiRoot) {
-              uiAnchor.remove(uiRoot)
-              uiRoot.dispose()
-            }
-
-            uiRoot = new Container()
-            const { setRootContainer, setSelectedComponent, setUikitData } = useComponentStore.getState()
-            setRootContainer(uiContent as Component<any>)
-            setUikitData({ ranges, element, classes })
-
-            // Subscribe to size changes and perform initial scaling
-            sizeUnsubscribe = uiRoot.size.subscribe(() => {
-              scaleToFitScreen()
-            })
-
-            // Perform initial scaling
-            scaleToFitScreen()
-
-            // If we had a selected component, try to find and re-select it
-            if (previousSelectedId) {
-              const foundComponent = componentUidMap.get(previousSelectedId)
-              if (foundComponent) {
-                setSelectedComponent(foundComponent)
-              } else {
-                // Component not found, clear selection
-                setSelectedComponent(null)
-              }
-            }
-
-            uiAnchor.add(
-              uiRoot.add(
-                createInspectorContainer(uiContent, (dataUid) => {
-                  vscode.postMessage({
-                    command: 'jump-to',
-                    rangeInfo: ranges?.[dataUid],
-                  })
-                  // Find the component by uid and set it as selected
-                  const foundComponent = componentUidMap.get(dataUid)
-                  if (foundComponent) {
-                    const { setSelectedComponent } = useComponentStore.getState()
-                    setSelectedComponent(foundComponent)
-                  }
-                }),
-              ),
-            )
-          }
-        }
-
+        lastMessageText = message.text // Save the message text for re-interpretation
+        rebuildUIWithCurrentKits()
         break
     }
   })

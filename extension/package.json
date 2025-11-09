@@ -14,9 +14,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onLanguage:uikitml"
-  ],
   "main": "./dist/extension.js",
   "contributes": {
     "languages": [
@@ -105,6 +102,7 @@
   "devDependencies": {
     "@types/glob": "^7.2.0",
     "@types/jest": "^29.5.14",
+    "@types/js-beautify": "^1.14.3",
     "@types/lodash": "^4.17.16",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
@@ -131,16 +129,17 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@pmndrs/msdfonts": "^1.0.36",
+    "@pmndrs/msdfonts": "^1.0.58",
     "@pmndrs/pointer-events": "^6.6.14",
-    "@pmndrs/uikit": "^1.0.36",
-    "@pmndrs/uikit-default": "^1.0.36",
-    "@pmndrs/uikit-lucide": "^1.0.36",
-    "@pmndrs/uikit-horizon": "^1.0.36",
+    "@pmndrs/uikit": "^1.0.58",
+    "@pmndrs/uikit-default": "^1.0.58",
+    "@pmndrs/uikit-horizon": "^1.0.58",
+    "@pmndrs/uikit-lucide": "^1.0.58",
     "@pmndrs/uikitml": "workspace:^",
     "@preact/signals-core": "^1.11.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
+    "js-beautify": "^1.15.4",
     "juice": "^11.0.1",
     "lodash": "^4.17.21",
     "parse5": "^7.3.0",

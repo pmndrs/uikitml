@@ -7,6 +7,7 @@ import {
   isValidCSSProperty,
   VOID_ELEMENTS
 } from '../shared/uikitml-definitions';
+import { kitRegistry } from './kit-registry';
 
 export class UIKitMLValidator {
   
@@ -59,30 +60,39 @@ export class UIKitMLValidator {
       }
       
       // Validate tag name
-      if (!isValidHTMLTag(tagName) && !isValidCustomElement(originalTagName)) {
-        let message = `Element '${originalTagName}' is not supported in uikitml.`;
-        
-        // Check for common custom element errors
-        if (originalTagName !== originalTagName.toLowerCase()) {
-          message += ` Custom elements must be lowercase.`;
-        } else if (originalTagName.includes('-')) {
-          message += ` Custom elements must be lowercase with hyphens (e.g., 'ui-button').`;
-        } else if (originalTagName.includes('_')) {
-          message += ` Custom elements cannot contain underscores.`;
-        } else {
-          message += ` Supported elements: div, span, button, img, input, etc.`;
+      // First check if it's a valid HTML tag
+      if (!isValidHTMLTag(tagName)) {
+        // Not a standard HTML tag, check if it exists in any kit
+        const kitsContainingComponent = kitRegistry.getKitsForComponent(originalTagName);
+
+        if (!kitsContainingComponent) {
+          // Not in any kit, check if it's a valid custom element format
+          if (!isValidCustomElement(originalTagName)) {
+            // Invalid format, show warning
+            let message = `Element '${originalTagName}' is not found in any kit and may not be supported.`;
+
+            // Check for common custom element errors
+            if (originalTagName !== originalTagName.toLowerCase()) {
+              message += ` Custom elements must be lowercase.`;
+            } else if (originalTagName.includes('_')) {
+              message += ` Custom elements cannot contain underscores.`;
+            } else {
+              message += ` Available kits: uikit-default, uikit-lucide, uikit-horizon.`;
+            }
+
+            diagnostics.push({
+              severity: DiagnosticSeverity.Warning,
+              range: {
+                start: startPos,
+                end: endPos
+              },
+              message,
+              source: 'uikitml'
+            });
+          }
+          // If it's a valid custom element format but not in kits, it might be custom - don't warn
         }
-        
-        diagnostics.push({
-          severity: DiagnosticSeverity.Error,
-          range: {
-            start: startPos,
-            end: endPos
-          },
-          message,
-          source: 'uikitml'
-        });
-        continue;
+        // If found in kits, it's valid - no diagnostic needed
       }
       
       // Validate attributes within this tag
@@ -181,19 +191,40 @@ export class UIKitMLValidator {
   }
   
   private validateCSSContent(cssText: string, startOffset: number, document: TextDocument, diagnostics: Diagnostic[]): void {
+    // Match CSS rules (selector { declarations })
+    // Supports class selectors with optional pseudo-classes like .heading:dark
+    const ruleRegex = /([.#][a-zA-Z0-9_-]+(?:::[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+)?)\s*\{([^}]*)\}/g;
+    let ruleMatch;
+
+    while ((ruleMatch = ruleRegex.exec(cssText)) !== null) {
+      const declarationsBlock = ruleMatch[2];
+      const blockStartOffset = startOffset + ruleMatch.index + ruleMatch[0].indexOf('{') + 1;
+
+      // Now validate the declarations inside this rule
+      this.validateCSSDeclarations(declarationsBlock, blockStartOffset, document, diagnostics);
+    }
+
+    // Also handle inline style attribute content (no selectors, just declarations)
+    // This regex checks if the content looks like inline styles (no curly braces)
+    if (!cssText.includes('{') && !cssText.includes('}')) {
+      this.validateCSSDeclarations(cssText, startOffset, document, diagnostics);
+    }
+  }
+
+  private validateCSSDeclarations(cssText: string, startOffset: number, document: TextDocument, diagnostics: Diagnostic[]): void {
     // Parse CSS declarations
     const declarationRegex = /([a-zA-Z-]+)\s*:\s*([^;]+);?/g;
     let match;
-    
+
     while ((match = declarationRegex.exec(cssText)) !== null) {
       const property = match[1].trim();
       const value = match[2].trim();
       const propStartOffset = startOffset + match.index;
       const propEndOffset = propStartOffset + match[0].length;
-      
+
       const startPos = document.positionAt(propStartOffset);
       const endPos = document.positionAt(propEndOffset);
-      
+
       // Validate CSS property
       if (!isValidCSSProperty(property)) {
         diagnostics.push({
@@ -206,7 +237,7 @@ export class UIKitMLValidator {
           source: 'uikitml'
         });
       }
-      
+
       // Validate some common CSS values
       this.validateCSSValue(property, value, propStartOffset, propEndOffset, document, diagnostics);
     }

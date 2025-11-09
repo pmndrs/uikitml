@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
+import { html as beautifyHtml } from "js-beautify";
 
 import {
   LanguageClient,
@@ -57,6 +58,46 @@ function clearDecorations() {
 export function activate(context: vscode.ExtensionContext) {
   // Start the Language Server
   startLanguageServer(context);
+
+  // Register document formatting provider for uikitml files
+  // Uses js-beautify to format as HTML
+  context.subscriptions.push(
+    vscode.languages.registerDocumentFormattingEditProvider('uikitml', {
+      provideDocumentFormattingEdits(
+        document: vscode.TextDocument,
+        options: vscode.FormattingOptions,
+        token: vscode.CancellationToken
+      ): vscode.TextEdit[] {
+        const text = document.getText();
+
+        try {
+          // Format using js-beautify HTML formatter
+          const formatted = beautifyHtml(text, {
+            indent_size: options.tabSize,
+            indent_char: options.insertSpaces ? ' ' : '\t',
+            max_preserve_newlines: 2,
+            preserve_newlines: true,
+            indent_inner_html: true,
+            wrap_line_length: 100,
+            wrap_attributes: 'auto',
+            end_with_newline: true,
+          });
+
+          // Replace the entire document with formatted content
+          const fullRange = new vscode.Range(
+            document.positionAt(0),
+            document.positionAt(text.length)
+          );
+
+          return [vscode.TextEdit.replace(fullRange, formatted)];
+        } catch (error) {
+          console.error('Failed to format uikitml document:', error);
+          vscode.window.showErrorMessage('Failed to format document: ' + error);
+          return [];
+        }
+      }
+    })
+  );
 
   vscode.window.onDidChangeActiveTextEditor((editor) => {
     activeEditor = editor;

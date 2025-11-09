@@ -9,11 +9,14 @@ import {
   TextDocumentPositionParams,
   TextDocumentSyncKind,
   InitializeResult,
+  Hover,
 } from 'vscode-languageserver/node';
 
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { UIKitMLValidator } from './uikitml-validator';
 import { UIKitMLCompletionProvider } from './uikitml-completion';
+import { UIKitMLHoverProvider } from './uikitml-hover';
+import { kitRegistry } from './kit-registry';
 
 // Create a connection for the server
 const connection = createConnection(ProposedFeatures.all);
@@ -21,9 +24,10 @@ const connection = createConnection(ProposedFeatures.all);
 // Create a simple text document manager
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
-// Create validator and completion provider
+// Create validator, completion provider, and hover provider
 const validator = new UIKitMLValidator();
 const completionProvider = new UIKitMLCompletionProvider();
+const hoverProvider = new UIKitMLHoverProvider();
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
@@ -52,7 +56,9 @@ connection.onInitialize((params: InitializeParams) => {
       completionProvider: {
         resolveProvider: true,
         triggerCharacters: ['<', ' ', '=', '"', "'", ':', ';']
-      }
+      },
+      // Tell the client that this server supports hover
+      hoverProvider: true
     }
   };
   if (hasWorkspaceFolderCapability) {
@@ -66,6 +72,11 @@ connection.onInitialize((params: InitializeParams) => {
 });
 
 connection.onInitialized(() => {
+  // Initialize kit registry
+  kitRegistry.initialize().catch(err => {
+    connection.console.error('Failed to initialize kit registry: ' + err);
+  });
+
   if (hasConfigurationCapability) {
     // Register for all configuration changes.
     connection.client.register(DidChangeConfigurationNotification.type, undefined);
@@ -170,6 +181,18 @@ connection.onCompletion(
 connection.onCompletionResolve(
   (item: CompletionItem): CompletionItem => {
     return completionProvider.resolveCompletionItem(item);
+  }
+);
+
+// This handler provides hover information for elements
+connection.onHover(
+  (_textDocumentPosition: TextDocumentPositionParams): Hover | null => {
+    const document = documents.get(_textDocumentPosition.textDocument.uri);
+    if (!document) {
+      return null;
+    }
+
+    return hoverProvider.provideHover(document, _textDocumentPosition.position);
   }
 );
 

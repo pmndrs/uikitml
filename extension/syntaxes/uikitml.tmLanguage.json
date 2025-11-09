@@ -81,6 +81,9 @@
           "include": "#uikitml-container-tag"
         },
         {
+          "include": "#uikitml-kit-component-tag"
+        },
+        {
           "include": "#uikitml-custom-tag"
         }
       ]
@@ -136,6 +139,48 @@
         {
           "name": "meta.tag.container.end.uikitml",
           "match": "(</)\\s*(div|span|p|h[1-6]|a|button|ul|ol|li|textarea|video|svg)\\s*(>)",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.uikitml"
+            },
+            "2": {
+              "name": "entity.name.tag.uikitml"
+            },
+            "3": {
+              "name": "punctuation.definition.tag.end.uikitml"
+            }
+          }
+        }
+      ]
+    },
+    "uikitml-kit-component-tag": {
+      "patterns": [
+        {
+          "name": "meta.tag.kit-component.uikitml",
+          "begin": "(<)([A-Z][a-zA-Z0-9]*)\\b",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.begin.uikitml"
+            },
+            "2": {
+              "name": "entity.name.tag.uikitml"
+            }
+          },
+          "end": "(>)",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.end.uikitml"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#tag-attributes"
+            }
+          ]
+        },
+        {
+          "name": "meta.tag.kit-component.end.uikitml",
+          "match": "(</)\\s*([A-Z][a-zA-Z0-9]*)\\s*(>)",
           "captures": {
             "1": {
               "name": "punctuation.definition.tag.begin.uikitml"
