@@ -1,12 +1,13 @@
 {
   "name": "uikitml-vscode",
-  "displayName": "uikitml",
+  "displayName": "UIKitML for VS Code",
   "publisher": "threejs-uikit",
   "description": "",
   "version": "0.1.3",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
-    "url": "git@github.com:pmndrs/uikit.git"
+    "url": "https://github.com/pmndrs/uikitml.git"
   },
   "engines": {
     "vscode": "^1.99.0"
