@@ -68,7 +68,7 @@ export class UIKitMLValidator {
           // Not in any kit, check if it's a valid custom element format
           if (!isValidCustomElement(originalTagName)) {
             // Invalid format, show warning
-            let message = `Element '${originalTagName}' is not found in any kit and may not be supported.`
+            let message = `Element '${originalTagName}' is not a supported HTML tag and is not found in any kit. It will fall back to a <div> container during parsing.`
 
             // Check for common custom element errors
             if (originalTagName !== originalTagName.toLowerCase()) {
@@ -88,8 +88,18 @@ export class UIKitMLValidator {
               message,
               source: 'uikitml',
             })
+          } else {
+            // Valid custom element format but not in kits - warn about fallback
+            diagnostics.push({
+              severity: DiagnosticSeverity.Warning,
+              range: {
+                start: startPos,
+                end: endPos,
+              },
+              message: `Element '${originalTagName}' is not found in any installed kit. It will fall back to a <div> container during parsing. Available kits: uikit-default, uikit-lucide, uikit-horizon.`,
+              source: 'uikitml',
+            })
           }
-          // If it's a valid custom element format but not in kits, it might be custom - don't warn
         }
         // If found in kits, it's valid - no diagnostic needed
       }

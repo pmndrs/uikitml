@@ -1,6 +1,7 @@
 import { Hover, Position, MarkupKind } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { kitRegistry, KitName } from './kit-registry'
+import { isValidHTMLTag } from '../shared/uikitml-definitions'
 
 export class UIKitMLHoverProvider {
   provideHover(document: TextDocument, position: Position): Hover | null {
@@ -16,18 +17,78 @@ export class UIKitMLHoverProvider {
 
     const { tagName } = tagInfo
 
+    // Check if this is a natively supported HTML tag
+    const isNativeTag = isValidHTMLTag(tagName.toLowerCase())
+
+    if (isNativeTag) {
+      return this.getHoverForNativeTag(tagName)
+    }
+
     // Check if this component exists in any kit
     const kits = kitRegistry.getKitsForComponent(tagName)
 
-    if (!kits || kits.length === 0) {
-      return null
+    if (kits && kits.length > 0) {
+      return this.getHoverForKitComponent(tagName, kits)
     }
 
+    // Tag is neither native nor in kits - show fallback warning
+    return this.getHoverForUnsupportedTag(tagName)
+  }
+
+  private getHoverForNativeTag(tagName: string): Hover {
+    const tagMap: Record<string, string> = {
+      div: 'container',
+      img: 'image or svg (based on file extension)',
+      svg: 'inline-svg',
+      video: 'video',
+      input: 'input',
+      textarea: 'textarea',
+      style: 'CSS styles (processed but not rendered)',
+    }
+
+    const mappedType = tagMap[tagName.toLowerCase()] || tagName
+
+    const markdown = [
+      `**${tagName}** (Native HTML element)`,
+      '',
+      `Maps to: \`${mappedType}\``,
+      '',
+      'This element is natively supported by the uikitml parser.',
+    ].join('\n')
+
+    return {
+      contents: {
+        kind: MarkupKind.Markdown,
+        value: markdown,
+      },
+    }
+  }
+
+  private getHoverForKitComponent(tagName: string, kits: KitName[]): Hover {
     // Format the kit names nicely
     const kitList = kits.map((kit) => `\`${kit}\``).join(', ')
     const pluralSuffix = kits.length > 1 ? 's' : ''
 
-    const markdown = [`**${tagName}**`, '', `Available in kit${pluralSuffix}: ${kitList}`].join('\n')
+    const markdown = [`**${tagName}** (Kit component)`, '', `Available in kit${pluralSuffix}: ${kitList}`].join('\n')
+
+    return {
+      contents: {
+        kind: MarkupKind.Markdown,
+        value: markdown,
+      },
+    }
+  }
+
+  private getHoverForUnsupportedTag(tagName: string): Hover {
+    const markdown = [
+      `**${tagName}** ⚠️`,
+      '',
+      '**Warning:** This element is not a supported HTML tag and is not found in any installed kit.',
+      '',
+      'It will **fall back to a `<div>` container** during parsing.',
+      '',
+      'Available kits: `uikit-default`, `uikit-lucide`, `uikit-horizon`',
+    ].join('\n')
 
     return {
       contents: {

@@ -12,37 +12,23 @@ export interface UIKitMLValidationError {
 }
 
 // Supported HTML element types in uikitml
+// These are the ONLY tags that are natively supported by the @pmndrs/uikitml parser
+// All other tags will be treated as custom components and must exist in a kit,
+// or will fall back to a container element
 export const SUPPORTED_HTML_TAGS = new Set([
-  // Text elements
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'p',
-  'span',
-  'a',
-
-  // Container elements
-  'div',
-
-  // List elements
-  'ul',
-  'ol',
-  'li',
+  // Container element
+  'div', // Maps to 'container'
 
   // Form elements
-  'button',
-  'textarea',
-  'input',
+  'textarea', // Maps to 'textarea'
+  'input', // Maps to 'input'
 
   // Media elements
-  'img',
-  'video',
-  'svg',
+  'img', // Maps to 'image' or 'svg' (based on extension)
+  'video', // Maps to 'video'
+  'svg', // Maps to 'inline-svg'
 
-  // Special style element
+  // Special style element (processed but not rendered)
   'style',
 ])
 
