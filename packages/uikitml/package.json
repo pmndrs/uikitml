@@ -3,7 +3,7 @@
   "version": "0.0.11",
   "type": "module",
   "dependencies": {
-    "@pmndrs/uikit": "^1.0.36",
+    "@pmndrs/uikit": "^1.0.58",
     "@preact/signals-core": "^1.11.0",
     "chai": "^5.2.1",
     "inline-style-parser": "^0.2.4",

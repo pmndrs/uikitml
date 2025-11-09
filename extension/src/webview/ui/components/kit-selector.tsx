@@ -1,47 +1,47 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useComponentStore, KitName } from '../store';
+import React, { useState, useRef, useEffect } from 'react'
+import { useComponentStore, KitName } from '../store'
 
 const kitOptions: { value: KitName; label: string }[] = [
   { value: 'uikit-default', label: 'Default' },
   { value: 'uikit-lucide', label: 'Lucide Icons' },
   { value: 'uikit-horizon', label: 'Horizon' },
-];
+]
 
 export const KitSelector: React.FC = () => {
-  const { selectedKits, setSelectedKits } = useComponentStore();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { selectedKits, setSelectedKits } = useComponentStore()
+  const [isOpen, setIsOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setIsOpen(false)
       }
-    };
+    }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
 
   const toggleKit = (kit: KitName) => {
     if (selectedKits.includes(kit)) {
-      setSelectedKits(selectedKits.filter(k => k !== kit));
+      setSelectedKits(selectedKits.filter((k) => k !== kit))
     } else {
-      setSelectedKits([...selectedKits, kit]);
+      setSelectedKits([...selectedKits, kit])
     }
-  };
+  }
 
   const getDisplayText = () => {
-    if (selectedKits.length === 0) return 'No kits selected';
-    if (selectedKits.length === kitOptions.length) return 'All kits';
-    return `${selectedKits.length} kit${selectedKits.length > 1 ? 's' : ''}`;
-  };
+    if (selectedKits.length === 0) return 'No kits selected'
+    if (selectedKits.length === kitOptions.length) return 'All kits'
+    return `${selectedKits.length} kit${selectedKits.length > 1 ? 's' : ''}`
+  }
 
   return (
     <div className="kit-selector" ref={dropdownRef}>
@@ -64,5 +64,5 @@ export const KitSelector: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

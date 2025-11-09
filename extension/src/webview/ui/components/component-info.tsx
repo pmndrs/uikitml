@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react'
 
 export interface ComponentInfoProps {
-  componentId: string;
-  componentClass: string;
-  onIdClick: () => void;
-  onClassClick: (className: string) => void;
+  componentId: string
+  componentClass: string
+  onIdClick: () => void
+  onClassClick: (className: string) => void
 }
 
 export const ComponentInfo: React.FC<ComponentInfoProps> = ({
@@ -14,10 +14,7 @@ export const ComponentInfo: React.FC<ComponentInfoProps> = ({
   onClassClick,
 }) => {
   // Get component identification info
-  const componentClasses =
-    typeof componentClass === "string"
-      ? componentClass.split(" ").filter(Boolean)
-      : [];
+  const componentClasses = typeof componentClass === 'string' ? componentClass.split(' ').filter(Boolean) : []
 
   return (
     <div className="component-info">
@@ -27,14 +24,10 @@ export const ComponentInfo: React.FC<ComponentInfoProps> = ({
         </span>
       )}
       {componentClasses.map((className) => (
-        <span
-          key={className}
-          className="component-class clickable"
-          onClick={() => onClassClick(className)}
-        >
+        <span key={className} className="component-class clickable" onClick={() => onClassClick(className)}>
           .{className}
         </span>
       ))}
     </div>
-  );
-};
+  )
+}

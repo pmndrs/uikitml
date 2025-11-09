@@ -3,4 +3,4 @@ export const conditionals = ['hover', 'active', 'focus', 'sm', 'md', 'lg', 'xl',
 export * from './parser/index.js'
 export * from './generator/index.js'
 export * from './interpreter/index.js'
-export { reversePainterSortStable } from "@pmndrs/uikit"
+export { reversePainterSortStable } from '@pmndrs/uikit'

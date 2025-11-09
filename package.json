@@ -1,7 +1,17 @@
 {
   "type": "module",
   "devDependencies": {
+    "@react-three/eslint-plugin": "^0.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.1.0",
     "json": "^11.0.0",
+    "prettier": "^3.4.2",
     "vsce": "^2.15.0"
   }
 }

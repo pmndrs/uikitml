@@ -29,7 +29,7 @@ class KitRegistry {
       const [defaultKit, lucideKit, horizonKit] = await Promise.all([
         import('@pmndrs/uikit-default'),
         import('@pmndrs/uikit-lucide'),
-        import('@pmndrs/uikit-horizon')
+        import('@pmndrs/uikit-horizon'),
       ])
 
       // Process each kit

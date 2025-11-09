@@ -1,32 +1,20 @@
-import React from "react";
+import React from 'react'
 
 export interface ActionButtonsProps {
-  onReset: () => void;
-  onApply: () => void;
-  hasChanges: boolean;
+  onReset: () => void
+  onApply: () => void
+  hasChanges: boolean
 }
 
-export const ActionButtons: React.FC<ActionButtonsProps> = ({
-  onReset,
-  onApply,
-  hasChanges,
-}) => {
+export const ActionButtons: React.FC<ActionButtonsProps> = ({ onReset, onApply, hasChanges }) => {
   return (
     <div className="action-buttons">
-      <button
-        className="reset-button"
-        onClick={onReset}
-        disabled={!hasChanges}
-      >
+      <button className="reset-button" onClick={onReset} disabled={!hasChanges}>
         Reset
       </button>
-      <button
-        className="apply-button"
-        onClick={onApply}
-        disabled={!hasChanges}
-      >
+      <button className="apply-button" onClick={onApply} disabled={!hasChanges}>
         Apply
       </button>
     </div>
-  );
-};
+  )
+}

@@ -1,76 +1,76 @@
-import React, { useState, useEffect } from "react";
-import { useComponentStore } from "../store";
-import { PropertyEditor, VSCodeApi } from "../../core/property-editor";
-import { PropertyInput } from "./property-input";
-import { ComponentInfo } from "./component-info";
-import { ActionButtons } from "./action-button";
-import { propertyConfigs } from "../../../shared/property-config";
+import React, { useState, useEffect } from 'react'
+import { useComponentStore } from '../store'
+import { PropertyEditor, VSCodeApi } from '../../core/property-editor'
+import { PropertyInput } from './property-input'
+import { ComponentInfo } from './component-info'
+import { ActionButtons } from './action-button'
+import { propertyConfigs } from '../../../shared/property-config'
 
 interface PropertiesPanelProps {
-  vscode: VSCodeApi;
+  vscode: VSCodeApi
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ vscode }) => {
-  const { selectedComponent, rootContainer } = useComponentStore();
-  const activeComponent = selectedComponent || rootContainer;
+  const { selectedComponent, rootContainer } = useComponentStore()
+  const activeComponent = selectedComponent || rootContainer
 
   // Create property editor instance
-  const [propertyEditor] = useState(() => new PropertyEditor(vscode));
+  const [propertyEditor] = useState(() => new PropertyEditor(vscode))
 
   // Single state object for all properties
-  const [propertyValues, setPropertyValues] = useState<Record<string, any>>({});
+  const [propertyValues, setPropertyValues] = useState<Record<string, any>>({})
 
   // Update property editor and states when component changes
   useEffect(() => {
-    propertyEditor.setComponent(activeComponent);
+    propertyEditor.setComponent(activeComponent)
 
     if (!activeComponent) {
-      setPropertyValues({});
-      return;
+      setPropertyValues({})
+      return
     }
 
-    const currentProps = activeComponent.properties.value as any;
-    const newValues: Record<string, any> = {};
+    const currentProps = activeComponent.properties.value as any
+    const newValues: Record<string, any> = {}
 
     propertyConfigs.forEach((config) => {
-      newValues[config.key] = currentProps[config.key];
-    });
+      newValues[config.key] = currentProps[config.key]
+    })
 
-    setPropertyValues(newValues);
-  }, [activeComponent, propertyEditor]);
+    setPropertyValues(newValues)
+  }, [activeComponent, propertyEditor])
 
   const updateProperty = (key: string, value: any) => {
-    propertyEditor.updateProperty(key, value);
+    propertyEditor.updateProperty(key, value)
     // Update the local state
-    setPropertyValues((prev) => ({ ...prev, [key]: value }));
-  };
+    setPropertyValues((prev) => ({ ...prev, [key]: value }))
+  }
 
   const resetChanges = () => {
-    propertyEditor.resetChanges();
+    propertyEditor.resetChanges()
 
-    if (!activeComponent) return;
+    if (!activeComponent) return
 
     // Update local state with reset values
-    const currentProps = activeComponent.properties.value as any;
-    const newValues: Record<string, any> = {};
+    const currentProps = activeComponent.properties.value as any
+    const newValues: Record<string, any> = {}
 
     propertyConfigs.forEach((config) => {
-      newValues[config.key] = currentProps[config.key];
-    });
+      newValues[config.key] = currentProps[config.key]
+    })
 
-    setPropertyValues(newValues);
-  };
+    setPropertyValues(newValues)
+  }
 
   const applyChanges = () => {
-    propertyEditor.applyChanges();
-  };
+    propertyEditor.applyChanges()
+  }
 
   if (!activeComponent) {
     return (
       <div className="properties-panel">
         <span className="no-selection">No component selected</span>
       </div>
-    );
+    )
   }
 
   return (
@@ -83,7 +83,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ vscode }) => {
       />
       <div className="properties-content">
         {propertyConfigs.map((config) => {
-          const value = propertyValues[config.key];
+          const value = propertyValues[config.key]
           return (
             <PropertyInput
               key={config.key}
@@ -94,14 +94,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ vscode }) => {
               type={config.type}
               options={config.options}
             />
-          );
+          )
         })}
       </div>
-      <ActionButtons
-        onReset={resetChanges}
-        onApply={applyChanges}
-        hasChanges={propertyEditor.hasPendingChanges()}
-      />
+      <ActionButtons onReset={resetChanges} onApply={applyChanges} hasChanges={propertyEditor.hasPendingChanges()} />
     </div>
-  );
-};
+  )
+}

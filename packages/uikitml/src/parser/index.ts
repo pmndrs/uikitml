@@ -350,8 +350,16 @@ function toUikitElementJson(element: any, config: ParseConfig | undefined): Elem
   }
 
   const sourceTag = element.nodeName.toLowerCase()
-  if (sourceTag === 'style' || sourceTag === 'link') {
+  if (sourceTag === 'style') {
     return undefined
+  }
+  // Only filter out link elements used for CSS imports (with ref attribute)
+  // Allow link elements without ref to be processed as custom components
+  if (sourceTag === 'link') {
+    const hasRefAttr = element.attrs?.some((attr: any) => attr.name === 'ref')
+    if (hasRefAttr) {
+      return undefined
+    }
   }
 
   let tag = sourceTag
