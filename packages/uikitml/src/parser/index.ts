@@ -526,9 +526,23 @@ function toUikitProperties(attributes: Array<{ name: string; value: string }>): 
   return finalProperties
 }
 
+// Panel borderRadius properties that are strictly numeric and commonly use 'px' suffix
+// These need px stripping since they are panel properties and not parsed as yoga properties
+const panelProperties = new Set([
+  'borderRadius',
+  'borderTopLeftRadius',
+  'borderTopRightRadius',
+  'borderBottomLeftRadius',
+  'borderBottomRightRadius',
+  'borderTopRadius',
+  'borderLeftRadius',
+  'borderRightRadius',
+  'borderBottomRadius',
+])
+
 export function parseInlineCss(styleString: string) {
   const parsedStyle = _parseInlineCSS(styleString)
-  const style: Record<string, string> = {}
+  const style: Record<string, string | number> = {}
   for (const parsedStyleEntry of parsedStyle) {
     if (parsedStyleEntry.type === 'comment') {
       continue
@@ -538,9 +552,47 @@ export function parseInlineCss(styleString: string) {
     if (key in yogaPropertyRenamings) {
       key = yogaPropertyRenamings[key as keyof typeof yogaPropertyRenamings]
     }
-    style[key] = parsedStyleEntry.value
+
+    // Only parse panel properties, leave Yoga properties as-is
+    if (panelProperties.has(key)) {
+      style[key] = parsePanelPropertyValue(key, parsedStyleEntry.value)
+    } else {
+      style[key] = parsedStyleEntry.value
+    }
   }
   return style
+}
+
+/**
+ * Parse borderRadius property values that need px unit stripping.
+ * These are typed as strict numbers in uikit (unlike opacity/borderBend which support percentages).
+ * - Numbers: returned as-is
+ * - "Npx": stripped to number
+ * - Other units (rem, em, etc.): kept as string with warning
+ */
+function parsePanelPropertyValue(propertyName: string, value: string): string | number {
+  // Handle unitless numbers
+  const numberMatch = value.match(/^-?\d+(?:\.\d+)?$/)
+  if (numberMatch) {
+    return parseFloat(value)
+  }
+
+  // Handle px units - strip to number
+  const pxMatch = value.match(/^(-?\d+(?:\.\d+)?)px$/)
+  if (pxMatch) {
+    return parseFloat(pxMatch[1]!)
+  }
+
+  // Warn about potentially unsupported units for borderRadius properties
+  if (value.match(/^-?\d+(?:\.\d+)?(rem|em|pt|vh|vw|vmin|vmax|%)$/)) {
+    console.warn(
+      `Property "${propertyName}" with value "${value}" may not be supported. ` +
+        `Border radius properties only support pixel values (use "10px" or "10").`,
+    )
+  }
+
+  // Keep everything else as-is (percentages, colors, keywords, etc.)
+  return value
 }
 
 const yogaPropertyRenamings = {

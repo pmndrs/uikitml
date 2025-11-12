@@ -54,7 +54,6 @@ describe('html parser', () => {
             src: 'test.mp4',
             autoplay: '',
           },
-          
         },
         classes: {},
       })
@@ -71,7 +70,6 @@ describe('html parser', () => {
             type: 'text',
             value: 'test',
           },
-          
         },
         classes: {},
       })
@@ -88,7 +86,6 @@ describe('html parser', () => {
             src: 'test.jpg',
             alt: 'test',
           },
-          
         },
         classes: {},
       })
@@ -105,7 +102,6 @@ describe('html parser', () => {
             src: 'test.svg',
             alt: 'test',
           },
-          
         },
         classes: {},
       })
@@ -119,7 +115,6 @@ describe('html parser', () => {
           sourceTag: 'svg',
           properties: {},
           text: '<svg><circle cx="50" cy="50" r="40"></circle></svg>',
-          
         },
         classes: {},
       })
@@ -138,18 +133,15 @@ describe('html parser', () => {
               sourceTag: 'p',
               children: ['Hello'],
               properties: {},
-              
             },
             {
               type: 'custom',
               sourceTag: 'p',
               children: ['World'],
               properties: {},
-              
             },
           ],
           properties: {},
-          
         },
         classes: {},
       })
@@ -306,7 +298,6 @@ describe('html parser', () => {
           properties: {
             dataTest: 'value',
           },
-          
         },
         classes: {},
       })
@@ -329,7 +320,6 @@ describe('html parser', () => {
               positionTop: '5px',
             },
           },
-          
         },
         classes: {},
       })
@@ -349,7 +339,6 @@ describe('html parser', () => {
               fontSize: '16px',
             },
           },
-          
         },
         classes: {},
       })
@@ -455,7 +444,6 @@ describe('html parser', () => {
           properties: {
             id: 'myButton',
           },
-          
         },
         classes: {
           __id__myButton: {
@@ -494,7 +482,6 @@ describe('html parser', () => {
               },
             },
           },
-          
         },
         classes: {},
       })
@@ -537,7 +524,6 @@ describe('html parser', () => {
             },
             type: 'text',
           },
-          
         },
         classes: {},
       })
@@ -564,7 +550,6 @@ describe('html parser', () => {
               },
             },
           },
-          
         },
         classes: {},
       })
@@ -588,7 +573,6 @@ describe('html parser', () => {
               },
             },
           },
-          
         },
         classes: {},
       })
@@ -618,7 +602,6 @@ describe('html parser', () => {
               },
             },
           },
-          
         },
         classes: {},
       })
@@ -641,7 +624,6 @@ describe('html parser', () => {
               },
             },
           },
-          
         },
         classes: {},
       })
@@ -660,7 +642,6 @@ describe('html parser', () => {
               hover: {},
             },
           },
-          
         },
         classes: {},
       })
@@ -684,7 +665,6 @@ describe('html parser', () => {
               },
             },
           },
-          
         },
         classes: {},
       })
@@ -724,7 +704,6 @@ describe('html parser', () => {
           properties: {
             class: 'text-red',
           },
-          
         },
         classes: {
           'text-red': {
@@ -773,11 +752,14 @@ describe('html parser', () => {
         throw new Error(`File not found: ${filePath}`)
       }
 
-      const result = parse(`
+      const result = parse(
+        `
         <link ref="./buttons.css"/>
         <link ref="./themes.css"/>
         <button class="btn btn-primary">Click me</button>
-      `, { resolveFile })
+      `,
+        { resolveFile },
+      )
 
       expectParseResult(result, {
         element: {
@@ -789,11 +771,11 @@ describe('html parser', () => {
           },
         },
         classes: {
-          'btn': {
+          btn: {
             origin: './buttons.css',
             content: {
               padding: '8px 16px',
-              borderRadius: '4px',
+              borderRadius: 4,
             },
           },
           'btn-primary': {
@@ -816,7 +798,6 @@ describe('html parser', () => {
           sourceTag: 'div',
           children: ['Hello'],
           properties: {},
-          
         },
         classes: {},
       })
@@ -835,7 +816,6 @@ describe('html parser', () => {
           sourceTag: 'div',
           children: ['Hello'],
           properties: {},
-          
         },
         classes: {},
       })
@@ -859,12 +839,199 @@ describe('html parser', () => {
           sourceTag: 'div',
           children: ['Hello'],
           properties: {},
-          
         },
         classes: {},
       })
 
       expect(errorMessage).to.include('Error loading CSS file')
+    })
+  })
+
+  describe('borderRadius px unit conversion', () => {
+    it('should convert border-radius with px to number', () => {
+      const result = parse('<div style="border-radius: 10px"></div>')
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              borderRadius: 10,
+            },
+          },
+        },
+        classes: {},
+      })
+    })
+
+    it('should keep unitless border-radius as number', () => {
+      const result = parse('<div style="border-radius: 20"></div>')
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              borderRadius: 20,
+            },
+          },
+        },
+        classes: {},
+      })
+    })
+
+    it('should convert all borderRadius variants with px', () => {
+      const result = parse(
+        '<div style="border-top-left-radius: 5px; border-top-right-radius: 10px; border-bottom-left-radius: 15px; border-bottom-right-radius: 20px"></div>',
+      )
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 10,
+              borderBottomLeftRadius: 15,
+              borderBottomRightRadius: 20,
+            },
+          },
+        },
+        classes: {},
+      })
+    })
+
+    it('should convert border-radius in CSS classes', () => {
+      const result = parse(`
+        <style>
+          .rounded {
+            border-radius: 8px;
+          }
+          .rounded-lg {
+            border-top-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+          }
+        </style>
+      `)
+
+      expectParseResult(result, {
+        element: undefined,
+        classes: {
+          rounded: {
+            content: {
+              borderRadius: 8,
+            },
+          },
+          'rounded-lg': {
+            content: {
+              borderTopLeftRadius: 12,
+              borderBottomRightRadius: 12,
+            },
+          },
+        },
+      })
+    })
+
+    it('should handle decimal values with px', () => {
+      const result = parse('<div style="border-radius: 2.5px"></div>')
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              borderRadius: 2.5,
+            },
+          },
+        },
+        classes: {},
+      })
+    })
+
+    it('should NOT convert padding with px (Yoga property)', () => {
+      const result = parse('<div style="padding: 10px; margin: 5px"></div>')
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              padding: '10px',
+              margin: '5px',
+            },
+          },
+        },
+        classes: {},
+      })
+    })
+
+    it('should NOT convert fontSize with px (text property)', () => {
+      const result = parse('<div style="font-size: 16px"></div>')
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              fontSize: '16px',
+            },
+          },
+        },
+        classes: {},
+      })
+    })
+
+    it('should keep rem/em units as strings for borderRadius', () => {
+      const result = parse('<div style="border-radius: 2rem"></div>')
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              borderRadius: '2rem',
+            },
+          },
+        },
+        classes: {},
+      })
+    })
+
+    it('should handle mixed properties correctly', () => {
+      const result = parse(
+        '<div style="border-radius: 10px; padding: 20px; opacity: 0.5; background-color: red"></div>',
+      )
+
+      expectParseResult(result, {
+        element: {
+          type: 'container',
+          sourceTag: 'div',
+          children: [],
+          properties: {
+            style: {
+              borderRadius: 10,
+              padding: '20px',
+              opacity: '0.5',
+              backgroundColor: 'red',
+            },
+          },
+        },
+        classes: {},
+      })
     })
   })
 })

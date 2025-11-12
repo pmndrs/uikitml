@@ -1,7 +1,8 @@
 import { expect } from 'chai'
 import { JSDOM } from 'jsdom'
 import { Container, Text, Image, Input, StyleSheet, Textarea } from '@pmndrs/uikit'
-import { interpret, Kit, getElementDescription } from '../src/interpreter/index.js'
+import { interpret, getElementDescription } from '../src/interpreter/index.js'
+import type { Kit } from '../src/interpreter/index.js'
 import { parse } from '../src/parser/index.js'
 import { Object3D } from 'three'
 
