@@ -17,26 +17,34 @@ const vscode = acquireVsCodeApi()
 
 vscode.postMessage({ command: 'request-content' })
 
-let currentJson: any | undefined = undefined
-
 const fovY = 75
 
 // Helper function to build the combined kit based on selected kit names
+// Priority order: uikit-lucide (lowest) -> uikit-default -> uikit-horizon (highest)
+// This ensures default and horizon always override lucide in case of collisions
 function buildKitFromSelection(selectedKits: KitName[]): Record<string, any> {
   const combinedKit: Record<string, any> = {}
 
-  for (const kitName of selectedKits) {
+  // Define the merge order: lucide first, then default, then horizon
+  const kitOrder: KitName[] = ['uikit-lucide', 'uikit-default', 'uikit-horizon']
+
+  for (const kitName of kitOrder) {
+    // Only include kits that are in the selectedKits array
+    if (!selectedKits.includes(kitName)) {
+      continue
+    }
+
     let kit: Record<string, any> | undefined
 
     switch (kitName) {
       case 'uikit-default':
         kit = defaultKit as Record<string, any>
         break
-      case 'uikit-lucide':
-        kit = defaultIcons as Record<string, any>
-        break
       case 'uikit-horizon':
         kit = horizonKit as Record<string, any>
+        break
+      case 'uikit-lucide':
+        kit = defaultIcons as Record<string, any>
         break
     }
 

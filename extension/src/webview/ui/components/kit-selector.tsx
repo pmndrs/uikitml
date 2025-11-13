@@ -3,8 +3,8 @@ import { useComponentStore, KitName } from '../store'
 
 const kitOptions: { value: KitName; label: string }[] = [
   { value: 'uikit-default', label: 'Default' },
-  { value: 'uikit-lucide', label: 'Lucide Icons' },
   { value: 'uikit-horizon', label: 'Horizon' },
+  { value: 'uikit-lucide', label: 'Lucide Icons' },
 ]
 
 export const KitSelector: React.FC = () => {
