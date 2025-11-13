@@ -3,6 +3,7 @@ export { PropertyInput } from './property-input'
 export { ComponentInfo } from './component-info'
 export { ActionButtons } from './action-button'
 export { KitSelector } from './kit-selector'
+export { ColorSchemeToggle } from './color-scheme-toggle'
 
 export type { PropertyInputProps } from './property-input'
 export type { ComponentInfoProps } from './component-info'

@@ -223,7 +223,7 @@
         border-radius: 5px;
         cursor: pointer;
         transition: all 0.2s ease;
-        min-width: 120px;
+        width: 140px;
         justify-content: space-between;
       }
       .kit-selector-button:hover {
@@ -267,6 +267,36 @@
       }
       .kit-option span {
         user-select: none;
+      }
+      /* Color Scheme Toggle Styles */
+      .color-scheme-toggle {
+        position: absolute;
+        top: 10px;
+        right: 160px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 27px;
+        height: 27px;
+        padding: 0;
+        font-size: 1rem;
+        background: var(--panel-dark-grey);
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        color: var(--text-white);
+        border: 1px solid var(--panel-grey);
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .color-scheme-toggle:hover {
+        background: var(--panel-grey);
+        border-color: var(--panel-light-grey);
+        transform: scale(1.05);
+      }
+      .color-scheme-toggle:active {
+        transform: scale(0.95);
       }
     </style>
   </body>

@@ -1,11 +1,11 @@
 import { Clock, Color, Group, MathUtils, Object3D, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
-import { Component, Container, reversePainterSortStable } from '@pmndrs/uikit'
+import { Component, Container, reversePainterSortStable, setPreferredColorScheme } from '@pmndrs/uikit'
 import { interpret, parse } from '@pmndrs/uikitml'
 import * as defaultKit from '@pmndrs/uikit-default'
 import * as defaultIcons from '@pmndrs/uikit-lucide'
 import * as horizonKit from '@pmndrs/uikit-horizon'
 
-import { PropertiesPanel, KitSelector } from '../ui/components'
+import { PropertiesPanel, KitSelector, ColorSchemeToggle } from '../ui/components'
 import React from 'react'
 import { createInspectorContainer } from './inspector'
 import { createRoot } from 'react-dom/client'
@@ -77,8 +77,16 @@ function initializeApp() {
     ),
   )
 
-  // Mount KitSelector in canvas container
+  // Mount KitSelector and ColorSchemeToggle in canvas container
   const canvasContainer = document.getElementById('canvas-container')!
+
+  // Create ColorSchemeToggle
+  const colorSchemeToggleContainer = document.createElement('div')
+  canvasContainer.appendChild(colorSchemeToggleContainer)
+  const colorSchemeToggleRoot = createRoot(colorSchemeToggleContainer)
+  colorSchemeToggleRoot.render(React.createElement(ColorSchemeToggle))
+
+  // Create KitSelector
   const kitSelectorContainer = document.createElement('div')
   canvasContainer.appendChild(kitSelectorContainer)
   const kitSelectorRoot = createRoot(kitSelectorContainer)
@@ -180,8 +188,11 @@ function initializeApp() {
     const uijson = parse(lastMessageText)
     const { ranges, element, classes } = uijson
 
+    // Get color scheme from store
+    const { selectedComponent, selectedKits, colorScheme } = useComponentStore.getState()
+    setPreferredColorScheme(colorScheme)
+
     // Get the currently selected component's ID before rebuilding
-    const { selectedComponent, selectedKits } = useComponentStore.getState()
     const previousSelectedId = selectedComponent?.userData?.id || (selectedComponent?.properties?.value as any)?.id
 
     // Build kit based on selected kits from store
@@ -257,14 +268,18 @@ function initializeApp() {
     }
   }
 
-  // Subscribe to kit selection changes
+  // Subscribe to kit selection and color scheme changes
   let previousKits = useComponentStore.getState().selectedKits
+  let previousColorScheme = useComponentStore.getState().colorScheme
   useComponentStore.subscribe((state) => {
     const currentKits = state.selectedKits
-    // Check if kits changed
-    if (JSON.stringify(currentKits) !== JSON.stringify(previousKits)) {
+    const currentColorScheme = state.colorScheme
+
+    // Check if kits or color scheme changed
+    if (JSON.stringify(currentKits) !== JSON.stringify(previousKits) || currentColorScheme !== previousColorScheme) {
       previousKits = currentKits
-      // Re-interpret with current kits
+      previousColorScheme = currentColorScheme
+      // Re-interpret with current kits and color scheme
       rebuildUIWithCurrentKits()
     }
   })
