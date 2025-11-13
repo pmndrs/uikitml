@@ -130,12 +130,12 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@pmndrs/msdfonts": "^1.0.58",
+    "@pmndrs/msdfonts": "^1.0.59",
     "@pmndrs/pointer-events": "^6.6.14",
-    "@pmndrs/uikit": "^1.0.58",
-    "@pmndrs/uikit-default": "^1.0.58",
-    "@pmndrs/uikit-horizon": "^1.0.58",
-    "@pmndrs/uikit-lucide": "^1.0.58",
+    "@pmndrs/uikit": "^1.0.59",
+    "@pmndrs/uikit-default": "^1.0.59",
+    "@pmndrs/uikit-horizon": "^1.0.59",
+    "@pmndrs/uikit-lucide": "^1.0.59",
     "@pmndrs/uikitml": "workspace:^",
     "@preact/signals-core": "^1.11.0",
     "@types/react": "^19.1.6",

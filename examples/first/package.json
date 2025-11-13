@@ -14,7 +14,7 @@
         "@pmndrs/uikit-lucide": "^1.0.36",
         "stats.js": "^0.17.0",
         "three": "^0.178.0",
-        "@pmndrs/uikit": "^1.0.36"
+        "@pmndrs/uikit": "^1.0.59"
     },
     "devDependencies": {
         "@types/stats.js": "^0.17.4",
