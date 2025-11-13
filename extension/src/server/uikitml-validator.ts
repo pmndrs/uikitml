@@ -104,8 +104,11 @@ export class UIKitMLValidator {
         // If found in kits, it's valid - no diagnostic needed
       }
 
-      // Validate attributes within this tag
-      this.validateAttributes(fullMatch, tagName, startOffset, document, diagnostics)
+      // Only validate attributes for base HTML tags, not custom components
+      // Custom components can have any props, so we skip validation for them
+      if (isValidHTMLTag(tagName)) {
+        this.validateAttributes(fullMatch, tagName, startOffset, document, diagnostics)
+      }
 
       // Validate void element usage
       if (VOID_ELEMENTS.has(tagName) && !fullMatch.includes('/>')) {
