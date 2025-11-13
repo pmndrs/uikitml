@@ -40,8 +40,8 @@ function interpretElement(json: ElementJson | string, kit?: Array<[string, new (
   if (typeof json === 'string') {
     const text: Text = new Text({
       text: computed(() => (text.parentContainer.value?.properties.value as any).text ?? json),
-      width: '100%',
-      height: '100%',
+      alignSelf: 'stretch',
+      flexGrow: 1,
     })
     return text
   }
