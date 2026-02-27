@@ -120,8 +120,8 @@ function interpretElement(json: ElementJson | string, kit?: Array<[string, new (
     element.classList.add(...classNames)
   }
 
-  if (element instanceof Container) {
-    ;(json as ContainerElementJson).children.forEach((childElementJson: ElementJson | string) => {
+  if (json.type === 'container' || json.type === 'custom' || !json.type) {
+    ;(json as ContainerElementJson).children?.forEach((childElementJson: ElementJson | string) => {
       const childElement = interpretElement(childElementJson, kit)
       if (childElement) {
         element.add(childElement)
