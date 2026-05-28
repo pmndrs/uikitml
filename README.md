@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> Replaced in favor of [this uikitml implementation](https://github.com/drawcall-ai/uikitml).
+
+
 # uikitml
 
 It is a **subset of HTML syntax** specifically designed for describing user interfaces in 3D space using the `pmndrs/uikit` project. It's a HTML-like markup language that can be interpreted into 3D UI components.
